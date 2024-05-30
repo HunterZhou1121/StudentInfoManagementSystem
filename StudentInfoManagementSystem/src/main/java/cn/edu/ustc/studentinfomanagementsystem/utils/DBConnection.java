@@ -82,7 +82,7 @@ public class DBConnection {
                             rs.getString("CourseID") + " " +
                             rs.getString("Credits") + " " +
                             rs.getString("Score") + " " +
-                            rs.getString("Status") + "\n");
+                            rs.getString("Status"));
                 }
             }
         } catch (SQLException e) {
