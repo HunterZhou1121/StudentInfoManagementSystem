@@ -21,6 +21,10 @@ import org.json.JSONObject;
 import java.io.File;
 import java.io.IOException;
 import java.nio.charset.StandardCharsets;
+import java.sql.Connection;
+import java.sql.PreparedStatement;
+import java.sql.ResultSet;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -112,39 +116,99 @@ public class imageUploader {
         return "";
     }
 
-    public static void main(String[] args) {
-        // path to a picture
-        String oldFilePath = "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/Wolffe.jpg";
-        // copy the picture
-        try {
-            fileManager.copyFile(oldFilePath, "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/Wolffe.jpg1");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // create a directory for the student
-        String dirPath = "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/";
-        String studentID = "PB21111738";
-        try {
-            fileManager.createDirectory(dirPath + studentID);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // move and rename the picture
-        String newFilePath = dirPath + studentID + "/" + studentID + ".jpg";
-        try {
-            fileManager.renameFile(oldFilePath, newFilePath);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        // upload the picture
-        File file = new File(newFilePath);
-        imageUploader uploader = new imageUploader("z1057247521@hotmail.com", "123456");
-        System.out.println(uploader.uploadImage(file));
-        // rename the copy
-        try {
-            fileManager.renameFile("src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/Wolffe.jpg1", oldFilePath);
-        } catch (IOException e) {
+    public void uploadAllLocalImages() {
+        // find all students in the database whose "PhotoURL" is null
+        String sql = "SELECT Enrolment.StudentID FROM Enrolment, Student WHERE Enrolment.ID = Student.ID AND Student.PhotoURL IS NULL";
+        // test connection
+        try (
+                Connection conn = DBConnection.getConnection();
+                PreparedStatement ps = conn.prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
+            while (rs.next()) {
+                String StudentID = rs.getString("StudentID");
+                // the picture is in "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/"
+                String rootPath = "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/";
+                String oldPicPath = rootPath + StudentID + ".jpg";
+                String newPicPath = rootPath + StudentID + "/" + StudentID + ".jpg";
+                // move them to their respective folders
+                try {
+                    fileManager.createDirectory(rootPath + StudentID + "/");
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                try {
+                    fileManager.renameFile(oldPicPath, newPicPath);
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                // upload the picture
+                File file = new File(newPicPath);
+                imageUploader uploader = new imageUploader("z1057247521@hotmail.com", "123456");
+                String url = uploader.uploadImage(file);
+                // query the student's ID from Enrolment, using StudentID
+                String querySQL = "SELECT ID FROM Enrolment WHERE StudentID = ?";
+                String ID = "";
+                try (PreparedStatement queryPS = conn.prepareStatement(querySQL)) {
+                    queryPS.setString(1, StudentID);
+                    try (ResultSet queryRS = queryPS.executeQuery()) {
+                        if (queryRS.next()) {
+                            ID = queryRS.getString("ID");
+                        }
+                    }
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+                // update the database
+                String updateSQL = "UPDATE Student SET PhotoURL = ? WHERE ID = ?";
+                try (PreparedStatement updatePS = conn.prepareStatement(updateSQL)) {
+                    updatePS.setString(1, url);
+                    updatePS.setString(2, ID);
+                    updatePS.executeUpdate();
+                } catch (SQLException e) {
+                    e.printStackTrace();
+                }
+            }
+        } catch (SQLException e) {
             e.printStackTrace();
         }
     }
+    public static void main(String[] args) {
+//        // path to a picture
+//        String oldFilePath = "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/Wolffe.jpg";
+//        // copy the picture
+//        try {
+//            fileManager.copyFile(oldFilePath, "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/Wolffe.jpg1");
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        // create a directory for the student
+//        String dirPath = "src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/";
+//        String studentID = "PB21111738";
+//        try {
+//            fileManager.createDirectory(dirPath + studentID);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        // move and rename the picture
+//        String newFilePath = dirPath + studentID + "/" + studentID + ".jpg";
+//        try {
+//            fileManager.renameFile(oldFilePath, newFilePath);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+//        // upload the picture
+//        File file = new File(newFilePath);
+//        imageUploader uploader = new imageUploader("z1057247521@hotmail.com", "123456");
+//        System.out.println(uploader.uploadImage(file));
+//        // rename the copy
+//        try {
+//            fileManager.renameFile("src/main/resources/cn/edu/ustc/studentinfomanagementsystem/pics/Wolffe.jpg1", oldFilePath);
+//        } catch (IOException e) {
+//            e.printStackTrace();
+//        }
+        imageUploader uploader = new imageUploader("z1057247521@hotmail.com", "123456");
+        uploader.uploadAllLocalImages();
+    }
+
 }
