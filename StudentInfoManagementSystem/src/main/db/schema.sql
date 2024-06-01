@@ -1,13 +1,21 @@
-DROP DATABASE lab02;
+DROP DATABASE IF EXISTS lab02;
 CREATE DATABASE lab02;
 USE lab02;
+DROP TABLE IF EXISTS Grade;
+DROP TABLE IF EXISTS Course;
+DROP TABLE IF EXISTS Award;
+DROP TABLE IF EXISTS Punishment;
+DROP TABLE IF EXISTS StudentAccount;
+DROP TABLE IF EXISTS TeacherAccount;
+DROP TABLE IF EXISTS Enrolment;
+DROP TABLE IF EXISTS Student;
 
 CREATE TABLE Student(
     ID VARCHAR(18) PRIMARY KEY,                     -- Identification number, 18 digits
     PhotoURL VARCHAR(255) UNIQUE,                   -- URL of the photo
     Name VARCHAR(50) NOT NULL,                      -- Name of the student
     Gender VARCHAR(10) NOT NULL,                    -- Gender of the student, either '男' or '女'. Primitive.
-    DOB DATE NOT NULL,                              -- Date of birth.
+    DOB DATE NOT NULL,                              -- Date of birth, no later than the current date
     Ethnicity VARCHAR(50) NOT NULL,                 -- Ethnicity such as '汉'
     PoliticalAffiliation VARCHAR(50) NOT NULL,      -- Political affiliation, from a given set which will be defined below
     PhoneNumber VARCHAR(20),                        -- Phone number. In China, they have 11 digits.
@@ -49,7 +57,7 @@ CREATE TABLE Student(
 CREATE TABLE Enrolment(
     StudentID VARCHAR(15) PRIMARY KEY,
     ID VARCHAR(18) UNIQUE NOT NULL,
-    EnrolmentDate DATE NOT NULL,
+    EnrolmentDate DATE NOT NULL DEFAULT (CURDATE()),
     Major VARCHAR(50) NOT NULL,
     -- Define the constraints here
     /*
@@ -127,21 +135,25 @@ CREATE TABLE Course(
 CREATE TABLE Grade (
     StudentID VARCHAR(15),
     CourseID VARCHAR(20),
-    Score INT NOT NULL,
+    Score INT,
     -- Define the constraints here
     -- Primary Key: StudentID and CourseID
     PRIMARY KEY (StudentID, CourseID),
     -- Student ID: A foreign key that references Student.ID
     FOREIGN KEY (StudentID) REFERENCES Enrolment(StudentID),
     -- Course ID: A foreign key that references Course.CourseID
-    FOREIGN KEY (CourseID) REFERENCES Course(CourseID)
+    FOREIGN KEY (CourseID) REFERENCES Course(CourseID),
+    -- Score: 0-100
+    CHECK (
+        Score >= 0 AND Score <= 100
+    )
 );
 
 CREATE TABLE Award (
     AwardName VARCHAR(50),
     StudentID VARCHAR(15),
     AwardLevel VARCHAR(10) NOT NULL,
-    AwardDate DATE DEFAULT (CURDATE()),
+    AwardDate DATE NOT NULL DEFAULT (CURDATE()),
     -- Define the constraints here
     -- Primary Key: (AwardName, StudentID)
     PRIMARY KEY (AwardName, StudentID),
@@ -158,7 +170,7 @@ CREATE TABLE Award (
 CREATE TABLE Punishment (
     PunishmentName VARCHAR(50),
     StudentID VARCHAR(15),
-    PunishmentDate DATE DEFAULT (CURDATE()),
+    PunishmentDate DATE NOT NULL DEFAULT (CURDATE()),
     -- Define the constraints here
     -- Primary Key: (PunishmentName, StudentID)
     PRIMARY KEY (PunishmentName, StudentID),
