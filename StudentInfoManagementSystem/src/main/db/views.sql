@@ -9,16 +9,29 @@ CREATE VIEW StudentGrade AS
         Course.CourseID,
         Course.Credits,
         Grade.Score,
-        -- Status: '通过' if Score >= 60, '未通过' otherwise
-        IF(Grade.Score >= 60, '通过', '未通过') AS Status
+        -- Status: null if score is null, '通过' if score >= 60, '未通过' otherwise
+        CASE
+            WHEN Grade.Score IS NULL THEN NULL
+            WHEN Grade.Score >= 60 THEN '通过'
+            ELSE '未通过'
+        END AS Status
     FROM Course, Grade
     WHERE Course.CourseID = Grade.CourseID;
 
 -- Student Info: Student ID, Student Name, Student Gender
 CREATE VIEW StudentInfo AS
     SELECT
-        Enrolment.StudentID,
+        Student.ID,
+        Student.PhotoURL,
         Student.Name,
-        Student.Gender
+        Student.Gender,
+        Student.DOB,
+        Student.Ethnicity,
+        Student.PoliticalAffiliation,
+        Student.PhoneNumber,
+        Student.Email,
+        Enrolment.StudentID,
+        Enrolment.EnrolmentDate,
+        Enrolment.Major
     FROM Student, Enrolment
     WHERE Student.ID = Enrolment.ID;
