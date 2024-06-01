@@ -1,3 +1,6 @@
+DROP TABLE IF EXISTS StudentAccount;
+DROP TABLE IF EXISTS TeacherAccount;
+
 -- Create table for student account
 CREATE TABLE StudentAccount(
     StudentUsername VARCHAR(15) PRIMARY KEY,                -- Username, same as student ID
@@ -25,13 +28,3 @@ CREATE TABLE TeacherAccount(
 INSERT INTO
     TeacherAccount(TeacherUsername, TeacherPassword)
 VALUES ('administrator', 'administrator');
-
--- Trigger to automatically create student account
-CREATE TRIGGER CreateStudentAccount AFTER INSERT ON Enrolment
-FOR EACH ROW
-BEGIN
-   --  New StudentAccount: NEW.StudentID, 123456
-    INSERT INTO
-        StudentAccount(StudentUsername)
-    VALUES (NEW.StudentID);
-END;
