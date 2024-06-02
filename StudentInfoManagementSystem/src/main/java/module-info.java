@@ -12,4 +12,6 @@ module cn.edu.ustc.studentinfomanagementsystem {
 
     opens cn.edu.ustc.studentinfomanagementsystem to javafx.fxml;
     exports cn.edu.ustc.studentinfomanagementsystem;
+    exports cn.edu.ustc.studentinfomanagementsystem.controllers;
+    opens cn.edu.ustc.studentinfomanagementsystem.controllers to javafx.fxml;
 }
