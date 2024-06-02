@@ -7,6 +7,7 @@ module cn.edu.ustc.studentinfomanagementsystem {
     requires org.apache.httpcomponents.httpcore;
     requires org.apache.httpcomponents.httpmime;
     requires org.json;
+    requires org.jetbrains.annotations;
 
 
     opens cn.edu.ustc.studentinfomanagementsystem to javafx.fxml;

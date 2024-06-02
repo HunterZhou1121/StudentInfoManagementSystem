@@ -1,4 +1,6 @@
 package cn.edu.ustc.studentinfomanagementsystem.utils;
+import org.jetbrains.annotations.NotNull;
+
 import java.sql.SQLException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -28,7 +30,7 @@ public class DBConnection {
             try {
                 connection.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                SQLExceptionHandler(e);
             }
         }
     }
@@ -39,7 +41,7 @@ public class DBConnection {
             try {
                 preparedStatement.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                SQLExceptionHandler(e);
             }
         }
     }
@@ -50,7 +52,7 @@ public class DBConnection {
             try {
                 resultSet.close();
             } catch (SQLException e) {
-                e.printStackTrace();
+                SQLExceptionHandler(e);
             }
         }
     }
@@ -60,6 +62,16 @@ public class DBConnection {
         close(resultSet);
         close(preparedStatement);
         close(connection);
+    }
+
+    // exception handling
+    public static void SQLExceptionHandler(@NotNull SQLException e) {
+        String sqlState = e.getSQLState();
+        String errorCode = String.valueOf(e.getErrorCode());
+        String message = e.getMessage();
+        System.out.println("SQLState: " + sqlState);
+        System.out.println("ErrorCode: " + errorCode);
+        System.out.println("Message: " + message);
     }
 
     public static void main(String[] args) {
@@ -86,7 +98,7 @@ public class DBConnection {
                 }
             }
         } catch (SQLException e) {
-            e.printStackTrace();
+            SQLExceptionHandler(e);
         }
     }
 }
