@@ -11,24 +11,40 @@ public class DBConnection {
     private static final String USER = "root";
     private static final String PASSWORD = "root";
 
-    static {
+    private static DBConnection instance;
+
+    private final Connection connection;
+
+    private DBConnection() throws SQLException {
         try {
             Class.forName("com.mysql.cj.jdbc.Driver");
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
+            connection = DriverManager.getConnection(URL, USER, PASSWORD);
+        } catch (ClassNotFoundException | SQLException e) {
+            throw new SQLException(e.getMessage());
         }
     }
 
     // get a connection to the database
-    public static Connection getConnection() throws SQLException {
-        return DriverManager.getConnection(URL, USER, PASSWORD);
+    public static DBConnection getInstance() throws SQLException {
+        if (instance == null) {
+            instance = new DBConnection();
+        } else if (instance.getConnection().isClosed()) {
+            instance = new DBConnection();
+        }
+        return instance;
+    }
+
+    public Connection getConnection() {
+        return connection;
     }
 
     // close connection
     public static void close(Connection connection) {
         if (connection != null) {
             try {
-                connection.close();
+                if (!connection.isClosed()) {
+                    connection.close();
+                }
             } catch (SQLException e) {
                 SQLExceptionHandler(e);
             }
@@ -39,7 +55,9 @@ public class DBConnection {
     public static void close(PreparedStatement preparedStatement) {
         if (preparedStatement != null) {
             try {
-                preparedStatement.close();
+                if (!preparedStatement.isClosed()) {
+                    preparedStatement.close();
+                }
             } catch (SQLException e) {
                 SQLExceptionHandler(e);
             }
@@ -50,7 +68,9 @@ public class DBConnection {
     public static void close(ResultSet resultSet) {
         if (resultSet != null) {
             try {
-                resultSet.close();
+                if (!resultSet.isClosed()) {
+                    resultSet.close();
+                }
             } catch (SQLException e) {
                 SQLExceptionHandler(e);
             }
@@ -79,8 +99,7 @@ public class DBConnection {
         String studentID = "PB21111738";
         // test connection
         try (
-            Connection conn = DBConnection.getConnection();
-            PreparedStatement ps = conn.prepareStatement(sql)
+            PreparedStatement ps = getInstance().getConnection().prepareStatement(sql)
         ) {
             // replace the first placeholder with studentID
             ps.setString(1, studentID);

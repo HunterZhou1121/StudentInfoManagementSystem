@@ -7,6 +7,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.Nullable;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -26,7 +27,20 @@ public class imageUploader {
 
     private static final String UID = "081a11e22460efe0cebd44e8e6972137";
 
-    public static String uploadImage(File file) {
+    private Connection connection;
+
+    public imageUploader() {
+        try {
+            connection = DBConnection.getInstance().getConnection();
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+        }
+    }
+
+    public static @Nullable String uploadImage(File file) {
+        if (!file.exists()) {
+            return null;
+        }
         try (CloseableHttpClient httpClient = HttpClients.createDefault()) {
             // upload file
             HttpPost httpPost = new HttpPost(UPLOAD_URL);
@@ -51,10 +65,12 @@ public class imageUploader {
                         JSONObject dataObj = jsonObject.getJSONObject("data");
                         return dataObj.getString("url");
                     } else {
-                        return "Upload failed. Code: " + code;
+                        System.out.println("Upload failed. Code: " + code);
+                        return null;
                     }
                 } else {
-                    return "Upload failed. Status code: " + statusCode;
+                    System.out.println("Upload failed. Status code: " + statusCode);
+                    return null;
                 }
             } catch(Exception e) {
                 e.printStackTrace();
@@ -62,15 +78,20 @@ public class imageUploader {
         } catch (Exception e) {
             e.printStackTrace();
         }
-        return "";
+        return null;
     }
-    public static void uploadAllLocalImages() {
+
+    public static @Nullable String uploadImage(String path) {
+        File file = new File(path);
+        return uploadImage(file);
+    }
+
+    public  void uploadAllLocalImages() {
         // find all students in the database whose "PhotoURL" is null
         String sql = "SELECT Enrolment.StudentID FROM Enrolment, Student WHERE Enrolment.ID = Student.ID AND Student.PhotoURL IS NULL";
         // test connection
         try (
-                Connection conn = DBConnection.getConnection();
-                PreparedStatement ps = conn.prepareStatement(sql);
+                PreparedStatement ps = connection.prepareStatement(sql);
                 ResultSet rs = ps.executeQuery()
         ) {
             while (rs.next()) {
@@ -89,7 +110,7 @@ public class imageUploader {
                 // query the student's ID from Enrolment, using StudentID
                 String querySQL = "SELECT ID FROM Enrolment WHERE StudentID = ?";
                 String ID = "";
-                try (PreparedStatement queryPS = conn.prepareStatement(querySQL)) {
+                try (PreparedStatement queryPS = connection.prepareStatement(querySQL)) {
                     queryPS.setString(1, StudentID);
                     try (ResultSet queryRS = queryPS.executeQuery()) {
                         if (queryRS.next()) {
@@ -101,7 +122,7 @@ public class imageUploader {
                 }
                 // update the database
                 String updateSQL = "UPDATE Student SET PhotoURL = ? WHERE ID = ?";
-                try (PreparedStatement updatePS = conn.prepareStatement(updateSQL)) {
+                try (PreparedStatement updatePS = connection.prepareStatement(updateSQL)) {
                     updatePS.setString(1, url);
                     updatePS.setString(2, ID);
                     updatePS.executeUpdate();
@@ -120,7 +141,8 @@ public class imageUploader {
         }
     }
     public static void main(String[] args) {
-        uploadAllLocalImages();
+        imageUploader uploader = new imageUploader();
+        uploader.uploadAllLocalImages();
     }
 
 }
