@@ -4,16 +4,174 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TextField?>
+<?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
 <?import javafx.scene.layout.HBox?>
+<?import javafx.scene.layout.VBox?>
 <?import javafx.scene.text.Font?>
 
 <AnchorPane prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.ustc.studentinfomanagementsystem.controllers.StudentController">
    <children>
       <TabPane layoutY="50.0" prefHeight="720.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <tabs>
-          <Tab text="Untitled Tab 2" />
-          <Tab text="Untitled Tab 1" />
+          <Tab text="基本信息">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <HBox alignment="CENTER" layoutX="140.0" layoutY="43.0" prefHeight="100.0" prefWidth="200.0" spacing="25.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                           <children>
+                              <VBox prefHeight="635.0" prefWidth="381.0" spacing="40.0">
+                                 <children>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="263.0" prefWidth="313.0" spacing="50.0">
+                                       <children>
+                                          <Label text="照片">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <ImageView fx:id="imageView" fitHeight="200.0" fitWidth="200.0" onMouseClicked="#updatePhoto" pickOnBounds="true" preserveRatio="true" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="姓名">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="nameTextField" editable="false" prefHeight="39.0" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="身份证号">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="IDTextField" editable="false" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="性别">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="genderTextField" editable="false" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="出生日期">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="DOBTextField" editable="false" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="民族">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="ethnicityTextField" editable="false" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="政治面貌">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="politicalAffiliationTextField" editable="false" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="635.0" prefWidth="381.0" spacing="40.0">
+                                 <children>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="手机号码">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="phoneNumberTextField" onAction="#updatePhoneNumber" prefHeight="39.0" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="电子邮箱">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="emailTextField" onAction="#updateEmail" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="635.0" prefWidth="381.0" spacing="40.0">
+                                 <children>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="学号">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="studentIDTextField" editable="false" prefHeight="39.0" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="入学日期">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="enrolmentDateTextField" editable="false" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                       <children>
+                                          <Label text="专业">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="20.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="majorTextField" editable="false" prefWidth="200.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children>
+                  </AnchorPane>
+               </content></Tab>
+          <Tab text="奖惩情况">
+               <content>
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+               </content></Tab>
+            <Tab text="我的课程">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
+            <Tab text="我的成绩">
+              <content>
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+              </content>
+            </Tab>
         </tabs>
       </TabPane>
       <HBox alignment="CENTER" layoutY="14.0" prefHeight="53.0" prefWidth="1280.0" spacing="100.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="15.0">

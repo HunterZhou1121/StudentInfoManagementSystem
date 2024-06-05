@@ -100,4 +100,8 @@ public class SceneManager {
     public FXMLLoader getLoader(String name) {
         return loaders.get(name);
     }
+
+    public Stage getStage() {
+        return this.stage;
+    }
 }

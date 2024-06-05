@@ -7,11 +7,10 @@ import javafx.scene.control.Label;
 import javafx.scene.layout.AnchorPane;
 
 import cn.edu.ustc.studentinfomanagementsystem.SceneManager;
-import cn.edu.ustc.studentinfomanagementsystem.utils.alertUtils;
 
 import java.io.IOException;
 
-public class HelloController {
+public class HelloController extends Controller {
     @FXML private AnchorPane anchorPane;
 
     @FXML private Label label;
@@ -33,7 +32,7 @@ public class HelloController {
     @FXML
     private void handleExitButtonAction() {
         // alert: "感谢使用"
-        alertUtils.showAlert("感谢使用", "感谢使用本系统！");
+        showAlert("感谢使用", "感谢使用本系统！");
         Platform.exit();
     }
 
