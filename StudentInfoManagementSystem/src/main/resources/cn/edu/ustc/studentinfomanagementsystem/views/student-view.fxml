@@ -4,6 +4,8 @@
 <?import javafx.scene.control.Label?>
 <?import javafx.scene.control.Tab?>
 <?import javafx.scene.control.TabPane?>
+<?import javafx.scene.control.TableColumn?>
+<?import javafx.scene.control.TableView?>
 <?import javafx.scene.control.TextField?>
 <?import javafx.scene.image.ImageView?>
 <?import javafx.scene.layout.AnchorPane?>
@@ -13,7 +15,7 @@
 
 <AnchorPane prefHeight="800.0" prefWidth="1280.0" xmlns="http://javafx.com/javafx/21" xmlns:fx="http://javafx.com/fxml/1" fx:controller="cn.edu.ustc.studentinfomanagementsystem.controllers.StudentController">
    <children>
-      <TabPane layoutY="50.0" prefHeight="720.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
+      <TabPane fx:id="studentTabPane" layoutY="50.0" prefHeight="720.0" prefWidth="1280.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0">
         <tabs>
           <Tab text="基本信息">
                <content>
@@ -160,16 +162,133 @@
                </content></Tab>
           <Tab text="奖惩情况">
                <content>
-                  <AnchorPane prefHeight="200.0" prefWidth="200.0" />
+                  <AnchorPane prefHeight="200.0" prefWidth="200.0">
+                     <children>
+                        <HBox alignment="CENTER" layoutX="289.0" layoutY="167.0" prefHeight="100.0" prefWidth="200.0" spacing="150.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                           <children>
+                              <VBox alignment="CENTER" prefHeight="640.0" prefWidth="400.0" spacing="25.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="奖项" textAlignment="CENTER">
+                                       <font>
+                                          <Font name="Microsoft YaHei" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="awardTableView" prefHeight="550.0" prefWidth="400.0">
+                                      <columns>
+                                        <TableColumn fx:id="awardNameColumn" editable="false" prefWidth="133.0" text="奖项名称" />
+                                        <TableColumn fx:id="awardLevelColumn" editable="false" prefWidth="133.0" text="奖项级别" />
+                                          <TableColumn fx:id="awardDateColumn" editable="false" prefWidth="133.0" text="奖项日期" />
+                                      </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                              <VBox alignment="CENTER" prefHeight="640.0" prefWidth="400.0" spacing="25.0">
+                                 <children>
+                                    <Label alignment="CENTER" contentDisplay="CENTER" text="惩罚" textAlignment="CENTER">
+                                       <font>
+                                          <Font name="Microsoft YaHei" size="20.0" />
+                                       </font>
+                                    </Label>
+                                    <TableView fx:id="punishmentTableView" prefHeight="550.0" prefWidth="400.0">
+                                       <columns>
+                                          <TableColumn fx:id="punishmentNameColumn" editable="false" prefWidth="200.0" text="惩罚名称" />
+                                          <TableColumn fx:id="punishmentDateColumn" editable="false" prefWidth="200.0" text="惩罚日期" />
+                                       </columns>
+                                       <columnResizePolicy>
+                                          <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                       </columnResizePolicy>
+                                    </TableView>
+                                 </children>
+                              </VBox>
+                           </children>
+                        </HBox>
+                     </children></AnchorPane>
                </content></Tab>
             <Tab text="我的课程">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <TableView fx:id="selectedCourseTableView" layoutX="159.0" layoutY="79.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                          <columns>
+                            <TableColumn fx:id="selectedCourseNameColumn" editable="false" prefWidth="75.0" text="课程名" />
+                            <TableColumn fx:id="selectedCourseIDColumn" editable="false" prefWidth="75.0" text="课程号" />
+                              <TableColumn fx:id="selectedCourseCreditsColumn" editable="false" prefWidth="75.0" text="课程学分" />
+                          </columns>
+                           <columnResizePolicy>
+                              <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                           </columnResizePolicy>
+                        </TableView>
+                     </children></AnchorPane>
               </content>
             </Tab>
             <Tab text="我的成绩">
               <content>
-                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0" />
+                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                     <children>
+                        <VBox layoutX="323.0" layoutY="182.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                           <children>
+                              <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                 <children>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                       <children>
+                                          <Label contentDisplay="CENTER" text="已通过学分" textAlignment="CENTER">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="passedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                       <children>
+                                          <Label contentDisplay="CENTER" text="未通过课程数" textAlignment="CENTER">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="failedCourseNumberTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                       <children>
+                                          <Label contentDisplay="CENTER" text="未通过学分" textAlignment="CENTER">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="failedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                       </children>
+                                    </HBox>
+                                    <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                       <children>
+                                          <Label contentDisplay="CENTER" text="加权平均分" textAlignment="CENTER">
+                                             <font>
+                                                <Font name="Microsoft YaHei" size="12.0" />
+                                             </font>
+                                          </Label>
+                                          <TextField fx:id="weightedAverageScoreTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                       </children>
+                                    </HBox>
+                                 </children>
+                              </HBox>
+                              <TableView fx:id="gradeTableView" prefHeight="542.0" prefWidth="1229.0">
+                                <columns>
+                                  <TableColumn fx:id="gradeCourseNameColumn" editable="false" prefWidth="75.0" text="课程名" />
+                                  <TableColumn fx:id="gradeCourseIDColumn" editable="false" prefWidth="75.0" text="课程号" />
+                                    <TableColumn fx:id="gradeCreditsColumn" editable="false" prefWidth="75.0" text="课程学分" />
+                                    <TableColumn fx:id="gradeColumn" editable="false" prefWidth="75.0" text="课程成绩" />
+                                    <TableColumn fx:id="gradeStatusColumn" editable="false" prefWidth="75.0" text="课程状态" />
+                                </columns>
+                                 <columnResizePolicy>
+                                    <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                 </columnResizePolicy>
+                              </TableView>
+                           </children>
+                        </VBox>
+                     </children></AnchorPane>
               </content>
             </Tab>
         </tabs>
@@ -181,7 +300,15 @@
                   <Font name="Microsoft YaHei" size="30.0" />
                </font>
             </Label>
-            <Button fx:id="logoutButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleLogoutButtonAction" text="登出" textAlignment="CENTER" />
+            <Button fx:id="refreshButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#refreshAllInfo" text="刷新" textAlignment="CENTER">
+               <font>
+                  <Font name="Microsoft YaHei" size="12.0" />
+               </font>
+            </Button>
+            <Button fx:id="logoutButton" alignment="CENTER" contentDisplay="CENTER" mnemonicParsing="false" onAction="#handleLogoutButtonAction" text="登出" textAlignment="CENTER">
+               <font>
+                  <Font name="Microsoft YaHei" size="12.0" />
+               </font></Button>
          </children>
       </HBox>
    </children>

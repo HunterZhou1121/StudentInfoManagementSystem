@@ -1,25 +1,38 @@
 package cn.edu.ustc.studentinfomanagementsystem.controllers;
 
+import cn.edu.ustc.studentinfomanagementsystem.DAO.AwardPunishmentDAO;
+import cn.edu.ustc.studentinfomanagementsystem.DAO.CourseDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.StudentDAO;
-import cn.edu.ustc.studentinfomanagementsystem.models.Student;
+import cn.edu.ustc.studentinfomanagementsystem.models.*;
 import cn.edu.ustc.studentinfomanagementsystem.utils.imageUploader;
+import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 import javafx.stage.FileChooser;
 import cn.edu.ustc.studentinfomanagementsystem.SceneManager;
 import org.jetbrains.annotations.NotNull;
 
 import java.io.File;
+import java.sql.Date;
 
 public class StudentController extends Controller {
     private Student student;
 
     private final StudentDAO studentDAO = new StudentDAO();
 
+    private final AwardPunishmentDAO awardPunishmentDAO = new AwardPunishmentDAO();
+
+    private final CourseDAO courseDAO = new CourseDAO();
+
     @FXML private Label welcomeLabel;
 
     @FXML private Button logoutButton;
+
+    @FXML private Button refreshButton;
+
+    @FXML private TabPane studentTabPane;
 
     @FXML private ImageView imageView;
 
@@ -44,6 +57,110 @@ public class StudentController extends Controller {
     @FXML private TextField enrolmentDateTextField;
 
     @FXML private TextField majorTextField;
+
+    @FXML private TableView<Award> awardTableView;
+
+    @FXML private TableColumn<Award, String> awardNameColumn;
+
+    @FXML private TableColumn<Award, String> awardLevelColumn;
+
+    @FXML private TableColumn<Award, Date> awardDateColumn;
+
+    @FXML private TableView<Punishment> punishmentTableView;
+
+    @FXML private TableColumn<Punishment, String> punishmentNameColumn;
+
+    @FXML private TableColumn<Punishment, Date> punishmentDateColumn;
+
+    @FXML private TableView<Course> selectedCourseTableView;
+
+    @FXML private TableColumn<Course, String> selectedCourseNameColumn;
+
+    @FXML private TableColumn<Course, String> selectedCourseIDColumn;
+
+    @FXML private TableColumn<Course, String> selectedCourseCreditsColumn;
+
+    @FXML private TableView<Course> gradeTableView;
+
+    @FXML private TableColumn<Course, String> gradeCourseNameColumn;
+
+    @FXML private TableColumn<Course, String> gradeCourseIDColumn;
+
+    @FXML private TableColumn<Course, String> gradeCreditsColumn;
+
+    @FXML private TableColumn<Course, Integer> gradeColumn;
+
+    @FXML private TableColumn<Course, String> gradeStatusColumn;
+
+    @FXML private TextField passedCreditsTextField;
+
+    @FXML private TextField failedCourseNumberTextField;
+
+    @FXML private TextField failedCreditsTextField;
+
+    @FXML private TextField weightedAverageScoreTextField;
+
+    private boolean welcomeLabelLoaded = false;
+
+    private boolean basicInfoLoaded = false;
+
+    private boolean awardsLoaded = false;
+
+    private boolean punishmentsLoaded = false;
+
+    private boolean selectedCoursesLoaded = false;
+
+    private boolean gradesLoaded = false;
+
+    private boolean statisticsLoaded = false;
+
+
+    @FXML
+    public void initialize() {
+        // set the columns of the awardTableView
+        awardNameColumn.setCellValueFactory(new PropertyValueFactory<>("awardName"));
+        awardLevelColumn.setCellValueFactory(new PropertyValueFactory<>("awardLevel"));
+        awardDateColumn.setCellValueFactory(new PropertyValueFactory<>("awardDate"));
+
+        // set the columns of the punishmentTableView
+        punishmentNameColumn.setCellValueFactory(new PropertyValueFactory<>("punishmentName"));
+        punishmentDateColumn.setCellValueFactory(new PropertyValueFactory<>("punishmentDate"));
+
+        // set the columns of the selectedCourseTableView
+        selectedCourseNameColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        selectedCourseIDColumn.setCellValueFactory(new PropertyValueFactory<>("courseID"));
+        selectedCourseCreditsColumn.setCellValueFactory(new PropertyValueFactory<>("credits"));
+
+        // set the columns of the gradeTableView
+        gradeCourseNameColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        gradeCourseIDColumn.setCellValueFactory(new PropertyValueFactory<>("courseID"));
+        gradeCreditsColumn.setCellValueFactory(new PropertyValueFactory<>("credits"));
+        gradeColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        gradeStatusColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
+        // create a listener to load awards and punishments when the tab is selected
+        studentTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue.getText()) {
+                case "基本信息" -> {
+                    // load basic information
+                    loadBasicInfo();
+                    // load the welcome label
+                    loadWelcomeLabel();
+
+                }
+                case "奖惩情况" -> {
+                    loadAwards();
+                    loadPunishments();
+                }
+                case "我的课程" -> loadSelectedCourses();
+                case "我的成绩" -> {
+                    loadGrades();
+                    loadStatistics();
+                }
+
+            }
+        });
+    }
 
     @FXML
     private void handleLogoutButtonAction() {
@@ -114,13 +231,25 @@ public class StudentController extends Controller {
         }
         student.setPhotoURL(newPhotoURL);
         if (studentDAO.updateStudentPhotoURL(newPhotoURL, student.getID())) {
-            setImageView();
+            loadImageView();
             showAlert("更新成功", "照片更新成功！");
         } else {
             student.setPhotoURL(oldPhotoURL);
             showAlert("更新失败", "照片更新失败！");
         }
 
+    }
+
+    @FXML
+    private void refreshAllInfo() {
+        resetFlags();
+        setStudent(student.getStudentID());
+        loadBasicInfo();
+        loadAwards();
+        loadPunishments();
+        loadSelectedCourses();
+        loadGrades();
+        loadStatistics();
     }
 
     // set student queried from the database with studentID
@@ -133,12 +262,88 @@ public class StudentController extends Controller {
         this.student = null;
     }
 
-    public void updateFields() {
-        if (student == null) {
+    // setters for flags
+    public void setWelcomeLabelLoaded(boolean welcomeLabelLoaded) {
+        this.welcomeLabelLoaded = welcomeLabelLoaded;
+    }
+
+    public void setBasicInfoLoaded(boolean basicInfoLoaded) {
+        this.basicInfoLoaded = basicInfoLoaded;
+    }
+
+    public void setAwardsLoaded(boolean awardsLoaded) {
+        this.awardsLoaded = awardsLoaded;
+    }
+
+    public void setPunishmentsLoaded(boolean punishmentsLoaded) {
+        this.punishmentsLoaded = punishmentsLoaded;
+    }
+
+    public void setSelectedCoursesLoaded(boolean selectedCoursesLoaded) {
+        this.selectedCoursesLoaded = selectedCoursesLoaded;
+    }
+
+    public void setGradesLoaded(boolean gradesLoaded) {
+        this.gradesLoaded = gradesLoaded;
+    }
+
+    public void setStatisticsLoaded(boolean statisticsLoaded) {
+        this.statisticsLoaded = statisticsLoaded;
+    }
+
+    // reset all flags
+    public void resetFlags() {
+        welcomeLabelLoaded = false;
+        basicInfoLoaded = false;
+        awardsLoaded = false;
+        punishmentsLoaded = false;
+        selectedCoursesLoaded = false;
+        gradesLoaded = false;
+        statisticsLoaded = false;
+    }
+
+    // getters for flags
+    public boolean isWelcomeLabelLoaded() {
+        return welcomeLabelLoaded;
+    }
+
+    public boolean isBasicInfoLoaded() {
+        return basicInfoLoaded;
+    }
+
+    public boolean isAwardsLoaded() {
+        return awardsLoaded;
+    }
+
+    public boolean isPunishmentsLoaded() {
+        return punishmentsLoaded;
+    }
+
+    public boolean isSelectedCoursesLoaded() {
+        return selectedCoursesLoaded;
+    }
+
+    public boolean isGradesLoaded() {
+        return gradesLoaded;
+    }
+
+    public boolean isStatisticsLoaded() {
+        return statisticsLoaded;
+    }
+
+    public void loadWelcomeLabel() {
+        if (student == null || welcomeLabelLoaded) {
             return;
         }
-        setImageView();
-        setImage(imageView, student.getPhotoURL());
+        setText(welcomeLabel, "欢迎，" + student.getName() + "！");
+        welcomeLabelLoaded = true;
+    }
+
+    public void loadBasicInfo() {
+        if (student == null || basicInfoLoaded) {
+            return;
+        }
+        loadImageView();
         setText(nameTextField, student.getName());
         setText(IDTextField, student.getID());
         setText(genderTextField, student.getGender());
@@ -150,14 +355,86 @@ public class StudentController extends Controller {
         setText(studentIDTextField, student.getStudentID());
         setText(enrolmentDateTextField, student.getEnrolmentDate().toString());
         setText(majorTextField, student.getMajor());
+        basicInfoLoaded = true;
     }
 
-    public void setImageView() {
+    public void loadImageView() {
         String photoURL = student.getPhotoURL();
         if (photoURL == null) {
             return;
         }
         setImage(imageView, photoURL);
+    }
+
+    public void loadAwards() {
+        if (student == null || awardsLoaded) {
+            return;
+        }
+        awardTableView.setItems(FXCollections.observableArrayList(awardPunishmentDAO.queryAwards(student.getStudentID())));
+        awardsLoaded = true;
+    }
+
+    public void loadPunishments() {
+        if (student == null || punishmentsLoaded) {
+            return;
+        }
+        punishmentTableView.setItems(FXCollections.observableArrayList(awardPunishmentDAO.queryPunishments(student.getStudentID())));
+        punishmentsLoaded = true;
+    }
+
+    public void loadSelectedCourses() {
+        if (student == null || selectedCoursesLoaded) {
+            return;
+        }
+        selectedCourseTableView.setItems(FXCollections.observableArrayList(courseDAO.querySelectedCourses(student.getStudentID())));
+        selectedCoursesLoaded = true;
+    }
+
+    public void loadGrades() {
+        if (student == null || gradesLoaded) {
+            return;
+        }
+        gradeTableView.setItems(FXCollections.observableArrayList(courseDAO.queryGrades(student.getStudentID())));
+        gradesLoaded = true;
+    }
+
+    public void loadPassedCredits() {
+        if (student == null) {
+            return;
+        }
+        setText(passedCreditsTextField, courseDAO.getPassedCredits(student.getStudentID()));
+    }
+
+    public void loadFailedCourseNumber() {
+        if (student == null) {
+            return;
+        }
+        setText(failedCourseNumberTextField, courseDAO.getFailedCourseNum(student.getStudentID()).toString());
+    }
+
+    public void loadFailedCredits() {
+        if (student == null) {
+            return;
+        }
+        setText(failedCreditsTextField, courseDAO.getFailedCredits(student.getStudentID()));
+    }
+
+    public void loadWeightedAverageScore() {
+        if (student == null) {
+            return;
+        }
+        setText(weightedAverageScoreTextField, courseDAO.getWeightedAverageScore(student.getStudentID()).toString());
+    }
+
+    public void loadStatistics() {
+        if (student == null || statisticsLoaded) {
+            return;
+        }
+        loadPassedCredits();
+        loadFailedCourseNumber();
+        loadFailedCredits();
+        loadWeightedAverageScore();
+        statisticsLoaded = true;
     }
 
 }

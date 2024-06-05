@@ -2,6 +2,7 @@ package cn.edu.ustc.studentinfomanagementsystem.controllers;
 
 import javafx.scene.control.Alert;
 import javafx.scene.control.ButtonType;
+import javafx.scene.control.Label;
 import javafx.scene.control.TextField;
 import javafx.scene.image.Image;
 import javafx.scene.image.ImageView;
@@ -10,6 +11,10 @@ import org.jetbrains.annotations.NotNull;
 public class Controller {
     public void setText(@NotNull TextField tf, String text) {
         tf.setText(text);
+    }
+
+    public void setText(@NotNull Label l, String text) {
+        l.setText(text);
     }
 
     public void setImage(@NotNull ImageView iv, Image i) {

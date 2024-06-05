@@ -3,6 +3,7 @@ package cn.edu.ustc.studentinfomanagementsystem.controllers;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.AccountDAO;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
+import javafx.fxml.FXMLLoader;
 import javafx.scene.control.*;
 import javafx.scene.layout.AnchorPane;
 
@@ -82,9 +83,17 @@ public class LoginController extends Controller {
                             e.printStackTrace();
                         }
                         // Set the StudentID
-                        StudentController studentController = SceneManager.getInstance().getLoader("student-view").getController();
+                        FXMLLoader loader = SceneManager.getInstance().getLoader("student-view");
+                        if (loader == null) {
+                            return;
+                        }
+                        StudentController studentController = loader.getController();
                         studentController.setStudent(username);
-                        studentController.updateFields();
+                        // force load info that appear first
+                        studentController.resetFlags();
+                        studentController.loadBasicInfo();
+                        studentController.loadWelcomeLabel();
+
                         SceneManager.getInstance().switchScene("student-view");
                         // empty the password field
                         passwordField.setText("");
