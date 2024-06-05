@@ -139,6 +139,12 @@ public class Student {
         return major;
     }
 
+    @Override
+    public String toString() {
+        return ID + ", " + photoURL + ", " + name + ", " + gender + ", " +
+                DOB.toString() + ", " + ethnicity + ", " + politicalAffiliation + ", " +
+                phoneNumber + ", " + email + ", " + studentID + ", " + enrolmentDate.toString() + ", " + major;
+    }
 
 
 

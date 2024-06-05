@@ -62,4 +62,64 @@ public class DAO {
             return null;
         }
     }
+
+    protected Float callFloatFunction(String functionName, String parameter, String alias, Connection connection) {
+        // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
+        String sql = "SELECT " + functionName + "(?) as " + alias;
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, parameter);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getFloat(alias);
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return null;
+        }
+    }
+
+    protected Integer callIntFunction(String functionName, String parameter, String alias, Connection connection) {
+        // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
+        String sql = "SELECT " + functionName + "(?) as " + alias;
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, parameter);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getInt(alias);
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return null;
+        }
+    }
+
+    protected String callDecimalFunction(String functionName, String parameter, String alias, Connection connection) {
+        // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
+        String sql = "SELECT " + functionName + "(?) as " + alias;
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, parameter);
+            try (ResultSet rs = ps.executeQuery()) {
+                if (rs.next()) {
+                    return rs.getBigDecimal(alias).toString();
+                } else {
+                    return null;
+                }
+            }
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return null;
+        }
+    }
 }
