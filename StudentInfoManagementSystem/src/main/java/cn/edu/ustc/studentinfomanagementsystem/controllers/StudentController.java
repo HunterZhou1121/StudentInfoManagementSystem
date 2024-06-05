@@ -16,21 +16,6 @@ public class StudentController extends Controller {
     private Student student;
 
     private final StudentDAO studentDAO = new StudentDAO();
-//    private String StudentID;
-//
-//    private String StudentName;
-//
-//    private String ID;
-//
-//    private String PhotoURL;
-//
-//    private String Gender;
-//
-//    private Date DOB;
-//
-//    private String Ethnicity;
-//
-//    private String PoliticalAffiliation;
 
     @FXML private Label welcomeLabel;
 
@@ -172,8 +157,6 @@ public class StudentController extends Controller {
         if (photoURL == null) {
             return;
         }
-//        Image image = new Image(photoURL);
-//        imageView.setImage(image);
         setImage(imageView, photoURL);
     }
 

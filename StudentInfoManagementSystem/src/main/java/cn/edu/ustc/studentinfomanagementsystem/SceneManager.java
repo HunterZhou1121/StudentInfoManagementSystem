@@ -8,7 +8,6 @@ import javafx.stage.Stage;
 import java.io.IOException;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Stack;
 
 public class SceneManager {
     private static SceneManager instance;
@@ -16,9 +15,6 @@ public class SceneManager {
     private final Map<String, Scene> scenes;
 
     private final Map<String, FXMLLoader> loaders;
-
-    // use a stack to keep track of the scene history
-//    private final Stack<String> sceneStack;
 
     private final int width;
     private final int height;
@@ -46,21 +42,6 @@ public class SceneManager {
         this.stage = stage;
     }
 
-//    public void switchScene(String fxml) {
-//        if (!scenes.containsKey(fxml)) {    // the scene has not been loaded
-//            try {
-//                FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
-//                Parent root = loader.load();
-//                Scene scene = new Scene(root, width, height);
-//                sceneStack.push(fxml);
-//                scenes.put(fxml, scene);
-//            } catch (IOException e) {
-//                e.printStackTrace();
-//            }
-//        }
-//        stage.setScene(scenes.get(fxml));
-//    }
-
     public void addScene(String name, String fxml) throws IOException {
         if (!scenes.containsKey(name)) {
             FXMLLoader loader = new FXMLLoader(getClass().getResource(fxml));
@@ -68,7 +49,6 @@ public class SceneManager {
             Scene scene = new Scene(root, width, height);
             scenes.put(name, scene);
             loaders.put(name, loader);
-//            sceneStack.push(name);
         }
     }
 
@@ -85,18 +65,9 @@ public class SceneManager {
         if (scenes.containsKey(name)) {
             scenes.remove(name);
             loaders.remove(name);
-            // remove the scene from the stack
-//            sceneStack.remove(name);
         }
     }
 
-//    public void back() {
-//        if (sceneStack.size() > 1) {
-//            sceneStack.pop();
-//            String fxml = sceneStack.peek();
-//            stage.setScene(scenes.get(fxml));
-//        }
-//    }
     public FXMLLoader getLoader(String name) {
         return loaders.get(name);
     }

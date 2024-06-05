@@ -17,9 +17,6 @@ public class AccountDAO extends DAO {
     }
 
     public String queryAccountPassword(String table, String UsernameFieldName, String PasswordFieldName, String username) {
-        // SELECT StudentPassword FROM StudentAccount WHERE StudentID = ?
-//        String sql = "SELECT " + queryField + " FROM " + table + " WHERE " + keyField + " = ?";
-//        String table(StudentAccount), String queryField(StudentPassword), String keyField(StudentUsername), String keyValue(?), Connection connection
         return super.queryDBField(table, PasswordFieldName, UsernameFieldName, username, connection);
     }
 

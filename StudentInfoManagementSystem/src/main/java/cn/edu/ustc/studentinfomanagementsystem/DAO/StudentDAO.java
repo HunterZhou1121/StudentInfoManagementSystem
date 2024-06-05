@@ -35,21 +35,6 @@ public class StudentDAO extends DAO {
         if (ID == null || phoneNumber == null) {
             return false;
         }
-//        String sql = "UPDATE Student SET PhoneNumber = ? WHERE ID = ?";
-//        try (
-//            Connection conn = DBConnection.getConnection();
-//            PreparedStatement ps = conn.prepareStatement(sql)
-//        ) {
-//            ps.setString(1, phoneNumber);
-//            ps.setString(2, ID);
-//            int affectedRows = ps.executeUpdate();
-//            // aR = 1, success; aR = 0, fail (no student with such ID)
-//            return affectedRows == 1;
-//        } catch (SQLException e) {
-//            DBConnection.SQLExceptionHandler(e);
-//            return false;
-//        }
-//        return updateDBField("Student", "PhoneNumber", phoneNumber, "ID", ID);
         return updateStudentField("PhoneNumber", phoneNumber, ID);
     }
 
@@ -58,21 +43,6 @@ public class StudentDAO extends DAO {
         if (ID == null || email == null) {
             return false;
         }
-//        String sql = "UPDATE Student SET Email = ? WHERE ID = ?";
-//        try (
-//            Connection conn = DBConnection.getConnection();
-//            PreparedStatement ps = conn.prepareStatement(sql)
-//        ) {
-//            ps.setString(1, email);
-//            ps.setString(2, ID);
-//            int affectedRows = ps.executeUpdate();
-//            // aR = 1, success; aR = 0, fail (no student with such ID)
-//            return affectedRows == 1;
-//        } catch (SQLException e) {
-//            DBConnection.SQLExceptionHandler(e);
-//            return false;
-//        }
-//        return updateDBField("Student", "Email", email, "ID", ID);
         return updateStudentField("Email", email, ID);
     }
 
