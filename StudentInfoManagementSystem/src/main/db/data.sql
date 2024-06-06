@@ -5,9 +5,9 @@ INSERT INTO
         ID, Name, Gender, DOB, Ethnicity, PoliticalAffiliation
     )
 VALUES
-    ('123456200211212333', 'Ezra Bridger', '男', '2002-11-21', '汉', '共青团员'),
-    ('234567200301014566', 'Ahsoka Tano', '女', '2003-01-01', '汉', '中共党员'),
-    ('135246200402021357', 'Sabine Wren', '女', '2004-02-02', '满', '中共预备党员');
+    ('123456200211212333', 'Ezra Bridger', '男', '2002-11-21', '汉族', '共青团员'),
+    ('234567200301014566', 'Ahsoka Tano', '女', '2003-01-01', '汉族', '中共党员'),
+    ('135246200402021357', 'Sabine Wren', '女', '2004-02-02', '满族', '中共预备党员');
 -- Insert into Enrolment
 INSERT INTO
     Enrolment(
