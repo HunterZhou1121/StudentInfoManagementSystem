@@ -4,7 +4,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.nio.file.StandardCopyOption;
-public class fileManager {
+public class FileManager {
     // Create a directory
     public static void createDirectory(String dirPath) throws IOException {
         Path path = Paths.get(dirPath);

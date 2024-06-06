@@ -17,7 +17,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-public class imageUploader {
+public class ImageUploader {
     private static final String UPLOAD_URL = "https://www.imgurl.org/api/v2/upload";
     private static final String AUTHORIZATION = "b9618b3a87522cec7a1ed000334e7186";
 
@@ -25,7 +25,7 @@ public class imageUploader {
 
     private Connection connection;
 
-    public imageUploader() {
+    public ImageUploader() {
         try {
             connection = DBConnection.getInstance().getConnection();
         } catch (SQLException e) {
@@ -80,7 +80,7 @@ public class imageUploader {
         return uploadImage(file);
     }
 
-    public  void uploadAllLocalImages() {
+    public void uploadAllLocalImages() {
         // find all students in the database whose "PhotoURL" is null
         String sql = "SELECT Enrolment.StudentID FROM Enrolment, Student WHERE Enrolment.ID = Student.ID AND Student.PhotoURL IS NULL";
         // test connection
@@ -135,7 +135,7 @@ public class imageUploader {
         }
     }
     public static void main(String[] args) {
-        imageUploader uploader = new imageUploader();
+        ImageUploader uploader = new ImageUploader();
         uploader.uploadAllLocalImages();
     }
 

@@ -4,7 +4,7 @@ import cn.edu.ustc.studentinfomanagementsystem.DAO.AwardPunishmentDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.CourseDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.StudentDAO;
 import cn.edu.ustc.studentinfomanagementsystem.models.*;
-import cn.edu.ustc.studentinfomanagementsystem.utils.imageUploader;
+import cn.edu.ustc.studentinfomanagementsystem.utils.ImageUploader;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -166,6 +166,8 @@ public class StudentController extends Controller {
     private void handleLogoutButtonAction() {
         // reset the student
         setStudent();
+        // reset all flags
+        resetFlags();
         // switch to the login view
         SceneManager.getInstance().switchScene("login-view");
         // delete the student view
@@ -224,7 +226,7 @@ public class StudentController extends Controller {
             return;
         }
         // upload using imageUploader
-        String newPhotoURL = imageUploader.uploadImage(file);
+        String newPhotoURL = ImageUploader.uploadImage(file);
         if (newPhotoURL == null) {
             showAlert("上传失败", "照片上传失败！");
             return;
@@ -361,6 +363,7 @@ public class StudentController extends Controller {
     public void loadImageView() {
         String photoURL = student.getPhotoURL();
         if (photoURL == null) {
+            imageView.setImage(null);
             return;
         }
         setImage(imageView, photoURL);
@@ -423,7 +426,13 @@ public class StudentController extends Controller {
         if (student == null) {
             return;
         }
-        setText(weightedAverageScoreTextField, courseDAO.getWeightedAverageScore(student.getStudentID()).toString());
+        // weighted average score can be null when there are no scores
+        Float weightedAverageScore = courseDAO.getWeightedAverageScore(student.getStudentID());
+        if (weightedAverageScore == null) {
+            clearText(weightedAverageScoreTextField);
+            return;
+        }
+        setText(weightedAverageScoreTextField, weightedAverageScore.toString());
     }
 
     public void loadStatistics() {
