@@ -42,7 +42,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="nameTextField" editable="false" prefHeight="39.0" prefWidth="200.0" />
+                                          <TextField fx:id="nameTextField" editable="false" prefHeight="39.0" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
@@ -52,7 +52,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="IDTextField" editable="false" prefWidth="200.0" />
+                                          <TextField fx:id="IDTextField" editable="false" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
@@ -62,17 +62,17 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="genderTextField" editable="false" prefWidth="200.0" />
+                                          <TextField fx:id="genderTextField" editable="false" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
-                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
+                                    <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0" stylesheets="@../styles/styles.css">
                                        <children>
                                           <Label text="出生日期">
                                              <font>
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="DOBTextField" editable="false" prefWidth="200.0" />
+                                          <TextField fx:id="DOBTextField" editable="false" prefWidth="200.0" styleClass="non-editable-textfield" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
@@ -82,7 +82,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="ethnicityTextField" editable="false" prefWidth="200.0" />
+                                          <TextField fx:id="ethnicityTextField" editable="false" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
@@ -92,7 +92,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="politicalAffiliationTextField" editable="false" prefWidth="200.0" />
+                                          <TextField fx:id="politicalAffiliationTextField" editable="false" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -106,7 +106,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="phoneNumberTextField" onAction="#updatePhoneNumber" prefHeight="39.0" prefWidth="200.0" />
+                                          <TextField fx:id="phoneNumberTextField" onAction="#updatePhoneNumber" prefHeight="39.0" prefWidth="200.0" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
@@ -116,7 +116,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="emailTextField" onAction="#updateEmail" prefWidth="200.0" />
+                                          <TextField fx:id="emailTextField" onAction="#updateEmail" prefWidth="200.0" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -130,7 +130,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="studentIDTextField" editable="false" prefHeight="39.0" prefWidth="200.0" />
+                                          <TextField fx:id="studentIDTextField" editable="false" prefHeight="39.0" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
@@ -140,7 +140,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="enrolmentDateTextField" editable="false" prefWidth="200.0" />
+                                          <TextField fx:id="enrolmentDateTextField" editable="false" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER_RIGHT" prefHeight="27.0" prefWidth="381.0" spacing="50.0">
@@ -150,7 +150,7 @@
                                                 <Font name="Microsoft YaHei" size="20.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="majorTextField" editable="false" prefWidth="200.0" />
+                                          <TextField fx:id="majorTextField" editable="false" prefWidth="200.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                  </children>
@@ -239,7 +239,7 @@
                                                 <Font name="Microsoft YaHei" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="passedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                          <TextField fx:id="passedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
@@ -249,7 +249,7 @@
                                                 <Font name="Microsoft YaHei" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="failedCourseNumberTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                          <TextField fx:id="failedCourseNumberTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
@@ -259,7 +259,7 @@
                                                 <Font name="Microsoft YaHei" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="failedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                          <TextField fx:id="failedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                     <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
@@ -269,7 +269,7 @@
                                                 <Font name="Microsoft YaHei" size="12.0" />
                                              </font>
                                           </Label>
-                                          <TextField fx:id="weightedAverageScoreTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
+                                          <TextField fx:id="weightedAverageScoreTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
                                        </children>
                                     </HBox>
                                  </children>

@@ -1,0 +1,10 @@
+.editable-textfield {
+    -fx-background-color: white;
+    -fx-border-color: lightgray;
+    -fx-border-width: 1;
+}
+
+.non-editable-textfield {
+    -fx-background-color: lightgray;
+    -fx-opacity: 0.7;
+}
