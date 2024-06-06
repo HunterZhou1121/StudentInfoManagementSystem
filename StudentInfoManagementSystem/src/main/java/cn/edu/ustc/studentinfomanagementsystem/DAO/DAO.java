@@ -2,10 +2,10 @@ package cn.edu.ustc.studentinfomanagementsystem.DAO;
 
 import cn.edu.ustc.studentinfomanagementsystem.utils.DBConnection;
 
-import java.sql.Connection;
-import java.sql.PreparedStatement;
-import java.sql.ResultSet;
-import java.sql.SQLException;
+import java.math.BigDecimal;
+import java.sql.*;
+import java.util.ArrayList;
+import java.util.List;
 
 public class DAO {
     protected boolean updateDBField(String table, String updateField, String updateValue, String keyField, String keyValue, Connection connection) {
@@ -22,6 +22,41 @@ public class DAO {
         } catch (SQLException e) {
             DBConnection.SQLExceptionHandler(e);
             return false;
+        }
+    }
+
+    protected boolean updateDBField(String table, String updateField, Date updateDate, String keyField, String keyValue, Connection connection) {
+//        String sql = "UPDATE ? SET ? = ? WHERE ? = ?";
+        String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField + " = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setDate(1, updateDate);
+            ps.setString(2, keyValue);
+            int affectedRows = ps.executeUpdate();
+            // aR = 1, success; aR = 0, fail (no student with such ID)
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    protected List<String> queryDBField(String table, String queryField) {
+        // SELECT StudentID FROM StudentInfo
+        String sql = "SELECT " + queryField + " FROM " + table;
+        List<String> resultList = new ArrayList<>();
+        try (
+                PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(sql);
+                ResultSet rs = ps.executeQuery()
+        ) {
+            while (rs.next()) {
+                resultList.add(rs.getString(queryField));
+            }
+            return resultList;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return resultList;
         }
     }
 
@@ -72,7 +107,12 @@ public class DAO {
             ps.setString(1, parameter);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getFloat(alias);
+                    Float result = rs.getFloat(alias);
+                    if (rs.wasNull()) {
+                        return null;
+                    } else {
+                        return result;
+                    }
                 } else {
                     return null;
                 }
@@ -92,7 +132,13 @@ public class DAO {
             ps.setString(1, parameter);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getInt(alias);
+//                    return rs.getInt(alias);
+                    Integer result = rs.getInt(alias);
+                    if (rs.wasNull()) {
+                        return null;
+                    } else {
+                        return result;
+                    }
                 } else {
                     return null;
                 }
@@ -112,7 +158,12 @@ public class DAO {
             ps.setString(1, parameter);
             try (ResultSet rs = ps.executeQuery()) {
                 if (rs.next()) {
-                    return rs.getBigDecimal(alias).toString();
+                    BigDecimal result = rs.getBigDecimal(alias);
+                    if (rs.wasNull()) {
+                        return null;
+                    } else {
+                        return result.toString();
+                    }
                 } else {
                     return null;
                 }
@@ -120,6 +171,59 @@ public class DAO {
         } catch (SQLException e) {
             DBConnection.SQLExceptionHandler(e);
             return null;
+        }
+    }
+
+    protected boolean callProcedure(String procedureName, String argument, Connection connection) {
+        // CALL DeleteStudent('PB22011111');
+        String callableSQL = "{CALL " + procedureName + "(?)}";
+        try (
+                CallableStatement cs = connection.prepareCall(callableSQL)
+        ) {
+            cs.setString(1, argument);
+            boolean hasResults = cs.execute();
+            while (hasResults) {
+                try (ResultSet rs = cs.getResultSet()) {
+                    // process result set
+                    while (rs.next()) {
+                        String message = rs.getString("Message");
+                        // Message exists: operation successful
+                        return true;
+                    }
+                }
+                hasResults = cs.getMoreResults();
+            }
+            return false;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    protected boolean callProcedure(String procedureName, String arg1, String arg2, Connection connection) {
+        // CALL UpdateStudentID('PB21111738', 'PB22111738');
+        String callableSQL = "{CALL " + procedureName + "(?, ?)}";
+        try (
+                CallableStatement cs = connection.prepareCall(callableSQL)
+        ) {
+            cs.setString(1, arg1);
+            cs.setString(2, arg2);
+            boolean hasResults = cs.execute();
+            while (hasResults) {
+                try (ResultSet rs = cs.getResultSet()) {
+                    // process result set
+                    while (rs.next()) {
+                        String message = rs.getString("Message");
+                        // Message exists: operation successful
+                        return true;
+                    }
+                }
+                hasResults = cs.getMoreResults();
+            }
+            return false;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
         }
     }
 }

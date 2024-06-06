@@ -52,6 +52,15 @@ public class LoginController extends Controller {
                         } catch (IOException e) {
                             e.printStackTrace();
                         }
+                        // set the teacherUsername
+                        FXMLLoader loader = SceneManager.getInstance().getLoader("teacher-view");
+                        if (loader == null) {
+                            return;
+                        }
+                        TeacherController teacherController = loader.getController();
+                        teacherController.setTeacherUsername(username);
+                        teacherController.loadWelcomeLabel();
+                        teacherController.loadStudentIDComboBox(true);
                         SceneManager.getInstance().switchScene("teacher-view");
                         // empty the password field
                         passwordField.setText("");
