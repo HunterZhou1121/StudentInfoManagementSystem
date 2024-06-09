@@ -372,54 +372,78 @@ public class StudentController extends Controller {
         loadGrades();
     }
 
-    public void loadPassedCredits() {
+    public boolean loadPassedCredits() {
         if (student == null) {
-            return;
+            clear(passedCreditsTextField);
+            return false;
         }
-        setText(passedCreditsTextField, GradeDAO.getPassedCredits(student.getStudentID()));
+        String passedCredits = GradeDAO.getPassedCredits(student.getStudentID());
+        if (passedCredits == null) {
+            clearText(passedCreditsTextField);
+            return false;
+        }
+        setText(passedCreditsTextField, passedCredits);
+        return true;
     }
 
-    public void loadFailedCourseNumber() {
+    public boolean loadFailedCourseNumber() {
         if (student == null) {
-            return;
+            clear(failedCourseNumberTextField);
+            return false;
         }
         Integer failedCourseNum = GradeDAO.getFailedCourseNum(student.getStudentID());
         if (failedCourseNum == null) {
             clearText(failedCourseNumberTextField);
-            return;
+            return false;
         }
         setText(failedCourseNumberTextField, failedCourseNum.toString());
+        return true;
     }
 
-    public void loadFailedCredits() {
+    public boolean loadFailedCredits() {
         if (student == null) {
-            return;
+            clear(failedCreditsTextField);
+            return false;
         }
-        setText(failedCreditsTextField, GradeDAO.getFailedCredits(student.getStudentID()));
+        String failedCredits = GradeDAO.getFailedCredits(student.getStudentID());
+        if (failedCredits == null) {
+            clearText(failedCreditsTextField);
+            return false;
+        }
+        setText(failedCreditsTextField, failedCredits);
+        return true;
     }
 
-    public void loadWeightedAverageScore() {
+    public boolean loadWeightedAverageScore() {
         if (student == null) {
-            return;
+            clear(weightedAverageScoreTextField);
+            return false;
         }
         // weighted average score can be null when there are no scores
         Float weightedAverageScore = GradeDAO.getWeightedAverageScore(student.getStudentID());
         if (weightedAverageScore == null) {
             clearText(weightedAverageScoreTextField);
-            return;
+            // but it can also be because of an error, so we return false regardless of the reason
+            return false;
         }
-        setText(weightedAverageScoreTextField, weightedAverageScore.toString());
+        setText(weightedAverageScoreTextField, String.format("%.2f", weightedAverageScore));
+        return true;
     }
 
     public void loadStatistics() {
-        if (student == null || statisticsLoaded) {
+        if (statisticsLoaded) {
             return;
         }
-        loadPassedCredits();
-        loadFailedCourseNumber();
-        loadFailedCredits();
-        loadWeightedAverageScore();
-        statisticsLoaded = true;
+//        loadPassedCredits();
+//        loadFailedCourseNumber();
+//        loadFailedCredits();
+//        loadWeightedAverageScore();
+//        statisticsLoaded = loadPassedCredits() && loadFailedCourseNumber() && loadFailedCredits() && loadWeightedAverageScore();
+        boolean passedCreditsLoaded = loadPassedCredits();
+        boolean failedCourseNumberLoaded = loadFailedCourseNumber();
+        boolean failedCreditsLoaded = loadFailedCredits();
+        boolean weightedAverageScoreLoaded = loadWeightedAverageScore();
+        statisticsLoaded = passedCreditsLoaded && failedCourseNumberLoaded && failedCreditsLoaded && weightedAverageScoreLoaded;
     }
 
     public void loadStatistics(boolean force) {

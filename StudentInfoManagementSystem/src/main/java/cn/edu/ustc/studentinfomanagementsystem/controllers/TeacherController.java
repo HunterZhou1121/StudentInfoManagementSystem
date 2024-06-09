@@ -1,6 +1,8 @@
 package cn.edu.ustc.studentinfomanagementsystem.controllers;
 
 import cn.edu.ustc.studentinfomanagementsystem.DAO.AwardPunishmentDAO;
+import cn.edu.ustc.studentinfomanagementsystem.DAO.CourseDAO;
+import cn.edu.ustc.studentinfomanagementsystem.DAO.GradeDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.StudentDAO;
 import cn.edu.ustc.studentinfomanagementsystem.SceneManager;
 import cn.edu.ustc.studentinfomanagementsystem.models.*;
@@ -382,6 +384,14 @@ public class TeacherController extends Controller {
 
     private boolean awardLevelComboBoxesLoaded = false;
 
+    private boolean coursesLoaded = false;
+
+    private boolean studentCoursesLoaded = false;
+
+    private boolean studentGradesLoaded = false;
+
+    private boolean studentGradeStatasticsLoaded = false;
+
     @FXML
     private void initialize() {
         // set the columns for tables
@@ -396,6 +406,19 @@ public class TeacherController extends Controller {
         courseNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
         courseIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseID"));
         courseCreditsTableColumn.setCellValueFactory(new PropertyValueFactory<>("credits"));
+        // grade
+        studentCourseStudentIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("studentID"));
+        studentCourseCourseNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        studentCourseCourseIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseID"));
+        studentCourseCreditsTableColumn.setCellValueFactory(new PropertyValueFactory<>("credits"));
+
+        studentGradeStudentIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("studentID"));
+        studentGradeCourseNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        studentGradeCourseIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseID"));
+        studentGradeCreditsTableColumn.setCellValueFactory(new PropertyValueFactory<>("credits"));
+        studentGradeGradeTableColumn.setCellValueFactory(new PropertyValueFactory<>("score"));
+        studentGradeStatusTableColumn.setCellValueFactory(new PropertyValueFactory<>("status"));
+
         // initialize the first ComboBox
         initializeStudentQueryComboBoxes();
         // listeners for the 1st level tab pane
@@ -438,10 +461,43 @@ public class TeacherController extends Controller {
                 }
                 case "课程管理" -> {
                     // consider 2nd level tab pane
+                    String subTabName = teacherCourseTabPane.getSelectionModel().selectedItemProperty().getValue().getText();
+                    switch (subTabName) {
+                        case "查询" -> {
+                            loadCourses();
+                        }
+                        case "添加" -> {
 
+                        }
+                        case "修改" -> {
+
+                        }
+                        case "删除" -> {
+
+                        }
+                    }
                 }
                 case "成绩管理" -> {
+                    // consider 2nd level tab pane
+                    String subTabName = teacherGradeTabPane.getSelectionModel().selectedItemProperty().getValue().getText();
+                    switch (subTabName) {
+                        case "学生选课查询" -> {
+                            loadStudentCurrentCourses();
+                        }
+                        case "学生成绩查询" -> {
+                            loadStudentGradeStatistics();
+                            loadStudentGrades();
+                        }
+                        case "学生选课添加" -> {
 
+                        }
+                        case "学生成绩添加/修改" -> {
+
+                        }
+                        case "学生选课/成绩删除" -> {
+
+                        }
+                    }
                 }
             }
         });
@@ -475,6 +531,44 @@ public class TeacherController extends Controller {
                     initializeAwardLevelComboBoxes();
                 }
                 case "删除" -> {
+
+                }
+            }
+        });
+
+        teacherCourseTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue.getText()) {
+                case "查询" -> {
+                    loadCourses();
+                }
+                case "添加" -> {
+
+                }
+                case "修改" -> {
+
+                }
+                case "删除" -> {
+
+                }
+            }
+        });
+
+        teacherGradeTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue.getText()) {
+                case "学生选课查询" -> {
+                    loadStudentCurrentCourses();
+                }
+                case "学生成绩查询" -> {
+                    loadStudentGradeStatistics();
+                    loadStudentGrades();
+                }
+                case "学生选课添加" -> {
+
+                }
+                case "学生成绩添加/修改" -> {
+
+                }
+                case "学生选课/成绩删除" -> {
 
                 }
             }
@@ -513,6 +607,10 @@ public class TeacherController extends Controller {
         // tables need reloading
         awardsLoaded = false;
         punishmentsLoaded = false;
+        coursesLoaded = false;
+        studentCoursesLoaded = false;
+        studentGradeStatasticsLoaded = false;
+        studentGradesLoaded = false;
     }
 
     @FXML
@@ -525,9 +623,13 @@ public class TeacherController extends Controller {
         clearAwardPunishmentAddInfo();
         clearAwardPunishmentUpdateInfo();
         clearAwardPunishmentDeleteInfo();
-        // reload the tables
+        // reload the tables and statistics
         loadAwards();
         loadPunishments();
+        loadCourses();
+        loadStudentCurrentCourses();
+        loadStudentGradeStatistics();
+        loadStudentGrades();
     }
 
     @FXML
@@ -1005,6 +1107,134 @@ public class TeacherController extends Controller {
         loadPunishments();
     }
 
+    public void loadCourses() {
+        if (coursesLoaded) {
+            return;
+        }
+        courseTableView.setItems(FXCollections.observableArrayList(CourseDAO.queryCourses()));
+        coursesLoaded = true;
+    }
+
+    public void loadCourses(boolean force) {
+        if (force) {
+            coursesLoaded = false;
+        }
+        loadCourses();
+    }
+
+    public void loadStudentCurrentCourses() {
+        if (studentCoursesLoaded) {
+            return;
+        }
+        if (currentStudent == null) {
+            studentCourseTableView.setItems(FXCollections.observableArrayList());
+            return;
+        }
+        studentCourseTableView.setItems(FXCollections.observableArrayList(GradeDAO.queryStudentCurrentCourses(currentStudent.getStudentID())));
+    }
+
+    public void loadStudentCurrentCourses(boolean force) {
+        if (force) {
+            studentCoursesLoaded = false;
+        }
+        loadStudentCurrentCourses();
+    }
+
+    public void loadStudentGrades() {
+        if (studentGradesLoaded) {
+            return;
+        }
+        if (currentStudent == null) {
+            studentGradeTableView.setItems(FXCollections.observableArrayList());
+            return;
+        }
+        studentGradeTableView.setItems(FXCollections.observableArrayList(GradeDAO.queryStudentGrades(currentStudent.getStudentID())));
+    }
+
+    public void loadStudentGrades(boolean force) {
+        if (force) {
+            studentGradesLoaded = false;
+        }
+        loadStudentGrades();
+    }
+
+    public boolean loadPassedCredits() {
+        if (currentStudent == null) {
+            clear(studentGradePassedCreditsTextField);
+            return false;
+        }
+        String passedCredits = GradeDAO.getPassedCredits(currentStudent.getStudentID());
+        if (passedCredits == null) {
+            clear(studentGradePassedCreditsTextField);
+            return false;
+        }
+        setText(studentGradePassedCreditsTextField, passedCredits);
+        return true;
+    }
+
+    public boolean loadFailedCourseNumber() {
+        if (currentStudent == null) {
+            clear(studentGradeFailedCourseNumberTextField);
+            return false;
+        }
+        Integer failedCourseNumber = GradeDAO.getFailedCourseNum(currentStudent.getStudentID());
+        if (failedCourseNumber == null) {
+            clear(studentGradeFailedCourseNumberTextField);
+            return false;
+        }
+        setText(studentGradeFailedCourseNumberTextField, failedCourseNumber.toString());
+        return true;
+    }
+
+    public boolean loadFailedCredits() {
+        if (currentStudent == null) {
+            clear(studentGradeFailedCreditsTextField);
+            return false;
+        }
+        String failedCredits = GradeDAO.getFailedCredits(currentStudent.getStudentID());
+        if (failedCredits == null) {
+            clear(studentGradeFailedCreditsTextField);
+            return false;
+        }
+        setText(studentGradeFailedCreditsTextField, failedCredits);
+        return true;
+    }
+
+    public boolean loadWeightedAverageScore() {
+        if (currentStudent == null) {
+            clear(studentGradeWeightedAverageScoreTextField);
+            return false;
+        }
+        // weighted average score can be null when there are no scores
+        Float weightedAverageScore = GradeDAO.getWeightedAverageScore(currentStudent.getStudentID());
+        if (weightedAverageScore == null) {
+            clear(studentGradeWeightedAverageScoreTextField);
+            // but it can also be because of an error, so we return false regardless of the reason
+            return false;
+        }
+        setText(studentGradeWeightedAverageScoreTextField, String.format("%.2f", weightedAverageScore));
+        return true;
+    }
+
+    public void loadStudentGradeStatistics() {
+        if (studentGradeStatasticsLoaded) {
+            return;
+        }
+//        studentGradeStatasticsLoaded = loadPassedCredits() && loadFailedCourseNumber() && loadFailedCredits() && loadWeightedAverageScore();
+        boolean passedCreditsLoaded = loadPassedCredits();
+        boolean failedCourseNumberLoaded = loadFailedCourseNumber();
+        boolean failedCreditsLoaded = loadFailedCredits();
+        boolean weightedAverageScoreLoaded = loadWeightedAverageScore();
+        studentGradeStatasticsLoaded = passedCreditsLoaded && failedCourseNumberLoaded && failedCreditsLoaded && weightedAverageScoreLoaded;
+    }
+
+    public void loadStudentGradeStatistics(boolean force) {
+        if (force) {
+            studentGradeStatasticsLoaded = false;
+        }
+        loadStudentGradeStatistics();
+    }
+
     public void clearStudentQueryInfo() {
         currentStudent = null;
         studentIDComboBox.setValue(null);
@@ -1074,6 +1304,10 @@ public class TeacherController extends Controller {
         awardsLoaded = false;
         punishmentsLoaded = false;
         awardLevelComboBoxesLoaded = false;
+        coursesLoaded = false;
+        studentCoursesLoaded = false;
+        studentGradesLoaded = false;
+        studentGradeStatasticsLoaded = false;
     }
 
     public void updateStudentName() {

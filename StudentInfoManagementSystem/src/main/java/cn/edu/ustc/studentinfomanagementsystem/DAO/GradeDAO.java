@@ -10,9 +10,9 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class GradeDAO extends DAO {
-    public static List<Course> queryStudentCurrentCourses(String studentID) {
+    public static List<Grade> queryStudentCurrentCourses(String studentID) {
         String sql = "SELECT * FROM StudentGrade WHERE StudentID = ?";
-        List<Course> courses = new ArrayList<>();
+        List<Grade> courses = new ArrayList<>();
         try (
             Connection conn = DBConnection.getConnection(true);
             PreparedStatement ps = conn.prepareStatement(sql)
@@ -25,14 +25,14 @@ public class GradeDAO extends DAO {
                     if (!rs.wasNull()) {
                         continue;
                     }
-//                    score = null;
+                    score = null;
                     String courseName = rs.getString("CourseName");
                     String courseID = rs.getString("CourseID");
                     String credits = rs.getBigDecimal("Credits").toString();
-//                    String status = rs.getString("Status");
+                    String status = rs.getString("Status");
 
-//                    Course course = new Grade(studentID, courseName, courseID, credits, score, status);
-                    Course course = new Course(courseName, courseID, credits);
+                    Grade course = new Grade(studentID, courseName, courseID, credits, score, status);
+//                    Course course = new Course(courseName, courseID, credits);
                     courses.add(course);
                 }
                 return courses;
@@ -43,9 +43,9 @@ public class GradeDAO extends DAO {
         }
     }
 
-    public static List<Course> queryStudentAllCourses(String studentID) {
+    public static List<Grade> queryStudentAllCourses(String studentID) {
         String sql = "SELECT * FROM StudentGrade WHERE StudentID = ?";
-        List<Course> courses = new ArrayList<>();
+        List<Grade> courses = new ArrayList<>();
         try (
             Connection conn = DBConnection.getConnection(true);
             PreparedStatement ps = conn.prepareStatement(sql)
@@ -60,10 +60,10 @@ public class GradeDAO extends DAO {
                     String courseName = rs.getString("CourseName");
                     String courseID = rs.getString("CourseID");
                     String credits = rs.getBigDecimal("Credits").toString();
-//                    String status = rs.getString("Status");
+                    String status = rs.getString("Status");
 
-//                    Course course = new Grade(studentID, courseName, courseID, credits, score, status);
-                    Course course = new Course(courseName, courseID, credits);
+                    Grade course = new Grade(studentID, courseName, courseID, credits, score, status);
+//                    Course course = new Course(courseName, courseID, credits);
                     courses.add(course);
                 }
                 return courses;
@@ -105,6 +105,7 @@ public class GradeDAO extends DAO {
         }
     }
 
+    // returns "0" if there are no passed courses
     public static @Nullable String getPassedCredits(String studentID) {
         // SELECT GetPassedCredits('PB21111738') as PassedCredits;
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -115,6 +116,7 @@ public class GradeDAO extends DAO {
         }
     }
 
+    // returns 0 if there are no failed courses
     public static @Nullable Integer getFailedCourseNum(String studentID) {
         // SELECT GetFailedCourseNum('PB21111738') as FailedCourseNum;
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -124,7 +126,7 @@ public class GradeDAO extends DAO {
             return null;
         }
     }
-
+    // returns "0" if there are no failed courses
     public static @Nullable String getFailedCredits(String studentID) {
         // SELECT GetFailedCredits('PB21111738') as FailedCredits;
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -135,6 +137,7 @@ public class GradeDAO extends DAO {
         }
     }
 
+    // returns null if there is no score to calculate the weighted average score
     public static @Nullable Float getWeightedAverageScore(String studentID) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -147,12 +150,12 @@ public class GradeDAO extends DAO {
 
     public static void main(String[] args) {
         String studentID = "PB21111738";
-        List<Course> allCourses = queryStudentAllCourses(studentID);
+        List<Grade> allCourses = queryStudentAllCourses(studentID);
         System.out.println("该学生所有课程：");
         for (Course course : allCourses) {
             System.out.println(course.toString());
         }
-        List<Course> selectedCourses = queryStudentCurrentCourses(studentID);
+        List<Grade> selectedCourses = queryStudentCurrentCourses(studentID);
         System.out.println("该学生当前已选课程：");
         for (Course course : selectedCourses) {
             System.out.println(course.toString());
