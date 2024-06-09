@@ -6,30 +6,26 @@ import java.sql.Connection;
 import java.sql.SQLException;
 
 public class AccountDAO extends DAO {
-    private Connection connection;
 
-    public AccountDAO() {
-        try {
-            connection = DBConnection.getInstance().getConnection();
+    public static String queryAccountPassword(String table, String UsernameFieldName, String PasswordFieldName, String username) {
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return queryDBField(table, PasswordFieldName, UsernameFieldName, username, conn);
         } catch (SQLException e) {
             DBConnection.SQLExceptionHandler(e);
+            return null;
         }
     }
 
-    public String queryAccountPassword(String table, String UsernameFieldName, String PasswordFieldName, String username) {
-        return super.queryDBField(table, PasswordFieldName, UsernameFieldName, username, connection);
-    }
-
-    public String queryStudentPassword(String studentUsername) {
+    public static String queryStudentPassword(String studentUsername) {
         return queryAccountPassword("StudentAccount", "StudentUsername", "StudentPassword", studentUsername);
     }
 
-    public String queryTeacherPassword(String teacherUsername) {
+    public static String queryTeacherPassword(String teacherUsername) {
         return queryAccountPassword("TeacherAccount", "TeacherUsername", "TeacherPassword", teacherUsername);
     }
     
     // authenticate the student
-    public String authenticateStudent(String studentUsername, String studentPassword) {
+    public static String authenticateStudent(String studentUsername, String studentPassword) {
         // username exists?
         String correctPassword = queryStudentPassword(studentUsername);
         if (correctPassword == null) {
@@ -44,7 +40,7 @@ public class AccountDAO extends DAO {
     }
 
     // authenticate the teacher
-    public String authenticateTeacher(String teacherUsername, String teacherPassword) {
+    public static String authenticateTeacher(String teacherUsername, String teacherPassword) {
         // username exists?
         String correctPassword = queryTeacherPassword(teacherUsername);
         if (correctPassword == null) {

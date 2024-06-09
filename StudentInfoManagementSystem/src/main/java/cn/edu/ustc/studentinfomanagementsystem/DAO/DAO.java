@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAO {
-    protected boolean updateDBField(String table, String updateField, String updateValue, String keyField, String keyValue, Connection connection) {
+    protected static boolean updateDBField(String table, String updateField, String updateValue, String keyField, String keyValue, Connection connection) {
 //        String sql = "UPDATE ? SET ? = ? WHERE ? = ?";
         String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField + " = ?";
         try (
@@ -25,14 +25,15 @@ public class DAO {
         }
     }
 
-    protected boolean updateDBField(String table, String updateField, Date updateDate, String keyField, String keyValue, Connection connection) {
-//        String sql = "UPDATE ? SET ? = ? WHERE ? = ?";
-        String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField + " = ?";
+    protected static boolean updateDBField(String table, String updateField, String updateValue, String keyField1, String keyValue1, String keyField2, String keyValue2, Connection connection) {
+        // UPDATE Award SET AwardName = ? WHERE StudentID = ? AND AwardName = ?
+        String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField1 + " = ? AND " + keyField2 + " = ?";
         try (
                 PreparedStatement ps = connection.prepareStatement(sql)
         ) {
-            ps.setDate(1, updateDate);
-            ps.setString(2, keyValue);
+            ps.setString(1, updateValue);
+            ps.setString(2, keyValue1);
+            ps.setString(3, keyValue2);
             int affectedRows = ps.executeUpdate();
             // aR = 1, success; aR = 0, fail (no student with such ID)
             return affectedRows == 1;
@@ -42,13 +43,83 @@ public class DAO {
         }
     }
 
-    protected List<String> queryDBField(String table, String queryField) {
+    protected static boolean updateDBField(String table, String updateField, Date updateDate, String keyField, String keyValue, Connection connection) {
+//        String sql = "UPDATE ? SET ? = ? WHERE ? = ?";
+        String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField + " = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setDate(1, updateDate);
+            ps.setString(2, keyValue);
+            int affectedRows = ps.executeUpdate();
+            // aR = 1, success; aR = 0, fail (no award with such ID & name)
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    protected static boolean updateDBField(String table, String updateField, Date updateDate, String keyField1, String keyValue1, String keyField2, String keyValue2, Connection connection) {
+        // UPDATE Award SET AwardDate = ? WHERE StudentID = ? AND AwardName = ?
+        String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField1 + " = ? AND " + keyField2 + " = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setDate(1, updateDate);
+            ps.setString(2, keyValue1);
+            ps.setString(3, keyValue2);
+            int affectedRows = ps.executeUpdate();
+            // aR = 1, success; aR = 0, fail (no award with such ID & name)
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    // delete with one key-value pair
+    protected static boolean deleteFromDBField(String table, String keyField, String keyValue, Connection connection) {
+        // DELETE FROM Award WHERE StudentID = ?
+        String sql = "DELETE FROM " + table + " WHERE " + keyField + " = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, keyValue);
+            int affectedRows = ps.executeUpdate();
+            // aR = 1, success; aR = 0, fail (no award with such ID & name)
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    // delete with two key-value pairs
+    protected static boolean deleteFromDBField(String table, String keyField1, String keyValue1, String keyField2, String keyValue2, Connection connection) {
+        // DELETE FROM Award WHERE StudentID = ? AND AwardName = ?
+        String sql = "DELETE FROM " + table + " WHERE " + keyField1 + " = ? AND " + keyField2 + " = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setString(1, keyValue1);
+            ps.setString(2, keyValue2);
+            int affectedRows = ps.executeUpdate();
+            // aR = 1, success; aR = 0, fail (no award with such ID & name)
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    protected static List<String> queryDBField(String table, String queryField, Connection connection) {
         // SELECT StudentID FROM StudentInfo
         String sql = "SELECT " + queryField + " FROM " + table;
         List<String> resultList = new ArrayList<>();
         try (
-                PreparedStatement ps = DBConnection.getInstance().getConnection().prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()
+            PreparedStatement ps = connection.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
         ) {
             while (rs.next()) {
                 resultList.add(rs.getString(queryField));
@@ -60,12 +131,12 @@ public class DAO {
         }
     }
 
-    protected boolean queryDBField(String table, String keyField, String keyValue, Connection connection) {
+    protected static boolean queryDBField(String table, String keyField, String keyValue, Connection connection) {
         // See if the student exists
         // SELECT * FROM StudentAccount WHERE StudentID = ?
         String sql = "SELECT * FROM " + table + " WHERE " + keyField + " = ?";
         try (
-                PreparedStatement ps = connection.prepareStatement(sql)
+            PreparedStatement ps = connection.prepareStatement(sql)
         ) {
             ps.setString(1, keyValue);
             return ps.executeQuery().next();
@@ -75,11 +146,11 @@ public class DAO {
         }
     }
 
-    protected String queryDBField(String table, String queryField, String keyField, String keyValue, Connection connection) {
+    protected static String queryDBField(String table, String queryField, String keyField, String keyValue, Connection connection) {
         // SELECT StudentPassword FROM StudentAccount WHERE StudentID = ?
         String sql = "SELECT " + queryField + " FROM " + table + " WHERE " + keyField + " = ?";
         try (
-                PreparedStatement ps = connection.prepareStatement(sql)
+            PreparedStatement ps = connection.prepareStatement(sql)
         ) {
             ps.setString(1, keyValue);
 /*            return ps.executeQuery().getString(queryField);*/
@@ -98,7 +169,7 @@ public class DAO {
         }
     }
 
-    protected Float callFloatFunction(String functionName, String parameter, String alias, Connection connection) {
+    protected static Float callFloatFunction(String functionName, String parameter, String alias, Connection connection) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         String sql = "SELECT " + functionName + "(?) as " + alias;
         try (
@@ -123,7 +194,7 @@ public class DAO {
         }
     }
 
-    protected Integer callIntFunction(String functionName, String parameter, String alias, Connection connection) {
+    protected static Integer callIntFunction(String functionName, String parameter, String alias, Connection connection) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         String sql = "SELECT " + functionName + "(?) as " + alias;
         try (
@@ -149,7 +220,7 @@ public class DAO {
         }
     }
 
-    protected String callDecimalFunction(String functionName, String parameter, String alias, Connection connection) {
+    protected static String callDecimalFunction(String functionName, String parameter, String alias, Connection connection) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         String sql = "SELECT " + functionName + "(?) as " + alias;
         try (
@@ -174,7 +245,7 @@ public class DAO {
         }
     }
 
-    protected boolean callProcedure(String procedureName, String argument, Connection connection) {
+    protected static boolean callProcedure(String procedureName, String argument, Connection connection) {
         // CALL DeleteStudent('PB22011111');
         String callableSQL = "{CALL " + procedureName + "(?)}";
         try (
@@ -200,7 +271,7 @@ public class DAO {
         }
     }
 
-    protected boolean callProcedure(String procedureName, String arg1, String arg2, Connection connection) {
+    protected static boolean callProcedure(String procedureName, String arg1, String arg2, Connection connection) {
         // CALL UpdateStudentID('PB21111738', 'PB22111738');
         String callableSQL = "{CALL " + procedureName + "(?, ?)}";
         try (

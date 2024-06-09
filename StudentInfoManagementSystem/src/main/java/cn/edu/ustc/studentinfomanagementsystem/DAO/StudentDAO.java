@@ -10,131 +10,142 @@ import java.util.Comparator;
 import java.util.List;
 
 public class StudentDAO extends DAO {
-    private Connection connection;
-
-    public StudentDAO() {
-        try {
-            connection = DBConnection.getInstance().getConnection();
-        } catch (SQLException e) {
-            DBConnection.SQLExceptionHandler(e);
-        }
+    private static boolean updateStudentField(String updateField, String updateValue, String keyValue, Connection connection) {
+        return updateDBField("Student", updateField, updateValue, "ID", keyValue, connection);
     }
 
-    private boolean updateDBField(String table, String updateField, String updateValue, String keyField, String keyValue) {
-        return super.updateDBField(table, updateField, updateValue, keyField, keyValue, connection);
+    private static boolean updateEnrolmentField(String updateField, String updateValue, String keyValue, Connection connection) {
+        return updateDBField("Enrolment", updateField, updateValue, "StudentID", keyValue, connection);
     }
 
-    private boolean updateDBField(String table, String updateField, Date updateDate, String keyField, String keyValue) {
-        return super.updateDBField(table, updateField, updateDate, keyField, keyValue, connection);
+    private static boolean updateEnrolmentField(String updateField, Date updateDate, String keyValue, Connection connection) {
+        return updateDBField("Enrolment", updateField, updateDate, "StudentID", keyValue, connection);
     }
 
-    private boolean updateStudentField(String updateField, String updateValue, String keyValue) {
-        return updateDBField("Student", updateField, updateValue, "ID", keyValue);
-    }
-
-    private boolean updateEnrolmentField(String updateField, String updateValue, String keyValue) {
-        return updateDBField("Enrolment", updateField, updateValue, "StudentID", keyValue);
-    }
-
-    private boolean updateEnrolmentField(String updateField, Date updateDate, String keyValue) {
-        return updateDBField("Enrolment", updateField, updateDate, "StudentID", keyValue);
-    }
-
-    private boolean callProcedure(String procedureName, String argument) {
-        return super.callProcedure(procedureName, argument, connection);
-    }
-
-    private boolean callProcedure(String procedureName, String arg1, String arg2) {
-        return super.callProcedure(procedureName, arg1, arg2, connection);
-    }
-
-    public boolean updateStudentPhoneNumber(String phoneNumber, String ID) {
+    public static boolean updateStudentPhoneNumber(String phoneNumber, String ID) {
         // for this student, update the phone number in the database
         if (ID == null || phoneNumber == null) {
             return false;
         }
-        return updateStudentField("PhoneNumber", phoneNumber, ID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return updateStudentField("PhoneNumber", phoneNumber, ID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public boolean updateStudentEmail(String email, String ID) {
+    public static boolean updateStudentEmail(String email, String ID) {
         // for this student, update the email in the database
         if (ID == null || email == null) {
             return false;
         }
-        return updateStudentField("Email", email, ID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return updateStudentField("Email", email, ID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public boolean updateStudentPhotoURL(String photoURL, String ID) {
+    public static boolean updateStudentPhotoURL(String photoURL, String ID) {
         // for this student, update the email in the database
         if (ID == null || photoURL == null) {
             return false;
         }
-//        return updateDBField("Student", "PhotoURL", photoURL, "ID", ID);
-        return updateStudentField("PhotoURL", photoURL, ID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return updateStudentField("PhotoURL", photoURL, ID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public boolean updateStudentName(String name, String ID) {
+    public static boolean updateStudentName(String name, String ID) {
         // for this student, update the name in the database
         if (ID == null || name == null) {
             return false;
         }
-        return updateStudentField("Name", name, ID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return updateStudentField("Name", name, ID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public boolean updateStudentGender(String gender, String ID) {
+    public static boolean updateStudentGender(String gender, String ID) {
         // for this student, update the gender in the database
         if (ID == null || gender == null) {
             return false;
         }
-        return updateStudentField("Gender", gender, ID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return updateStudentField("Gender", gender, ID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public boolean updateStudentEthnicity(String ethnicity, String ID) {
+    public static boolean updateStudentEthnicity(String ethnicity, String ID) {
         // for this student, update the ethnicity in the database
         if (ID == null || ethnicity == null) {
             return false;
         }
-        return updateStudentField("Ethnicity", ethnicity, ID);
+        try (Connection connection = DBConnection.getConnection(true)) {
+            return updateStudentField("Ethnicity", ethnicity, ID, connection);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public boolean updateStudentPoliticalAffiliation(String politicalAffiliation, String ID) {
+    public static boolean updateStudentPoliticalAffiliation(String politicalAffiliation, String ID) {
         // for this student, update the political affiliation in the database
         if (ID == null || politicalAffiliation == null) {
             return false;
         }
-        return updateStudentField("PoliticalAffiliation", politicalAffiliation, ID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return updateStudentField("PoliticalAffiliation", politicalAffiliation, ID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public boolean updateStudentID(String newStudentID, String oldStudentID) {
+    public static boolean updateStudentID(String newStudentID, String oldStudentID) {
         // for this student, update the student ID in the database
         if (oldStudentID == null || newStudentID == null) {
             return false;
         }
         // CALL UpdateStudentID('PB21111738', 'PB22111738');
-        return callProcedure("UpdateStudentID", oldStudentID, newStudentID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return callProcedure("UpdateStudentID", oldStudentID, newStudentID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-//    public boolean updateStudentEnrolmentDate(Date newEnrolmentDate, String studentID) {
-//        // for this student, update the enrolment date in the database
-//        if (studentID == null || newEnrolmentDate == null) {
-//            return false;
-//        }
-//        return updateEnrolmentField("EnrolmentDate", newEnrolmentDate, studentID);
-//    }
-
-    public boolean updateStudentMajor(String newMajor, String studentID) {
+    public static boolean updateStudentMajor(String newMajor, String studentID) {
         // for this student, update the major in the database
         if (studentID == null || newMajor == null) {
             return false;
         }
-        return updateEnrolmentField("Major", newMajor, studentID);
+        try (Connection connection = DBConnection.getConnection(true)) {
+            return updateEnrolmentField("Major", newMajor, studentID, connection);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
-    public @Nullable Student queryStudent(@NotNull String studentID) {
+    public static @Nullable Student queryStudent(@NotNull String studentID) {
         // query the database to get the rest of the information
         String sql  = "SELECT * FROM StudentInfo WHERE StudentID = ?";
         try (
-                PreparedStatement ps = connection.prepareStatement(sql)
+            Connection conn = DBConnection.getConnection(true);
+            PreparedStatement ps = conn.prepareStatement(sql)
         ) {
             ps.setString(1, studentID);
             try (ResultSet rs = ps.executeQuery()) {
@@ -172,72 +183,91 @@ public class StudentDAO extends DAO {
         }
     }
 
-    public List<String> queryStudentIDs() {
+    public static @Nullable List<String> queryStudentIDs() {
         // SELECT StudentID FROM StudentInfo
-        return super.queryDBField("StudentInfo", "StudentID");
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return queryDBField("StudentInfo", "StudentID", conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return null;
+        }
     }
 
-    public List<String> queryStudentIDsASEC() {
+    public static List<String> queryStudentIDsASEC() {
         List<String> studentIDs = queryStudentIDs();
-        studentIDs.sort(String::compareTo);
+        if (studentIDs != null) {
+            studentIDs.sort(String::compareTo);
+        }
         return studentIDs;
     }
 
-    public List<String> queryStudentIDsDESC() {
+    public static List<String> queryStudentIDsDESC() {
         List<String> studentIDs = queryStudentIDs();
-        studentIDs.sort(Comparator.reverseOrder());
+        if (studentIDs != null) {
+            studentIDs.sort(Comparator.reverseOrder());
+        }
         return studentIDs;
     }
 
-    public boolean insertStudent(@NotNull Student student) {
+    public static boolean insertStudent(@NotNull Student student) {
         // insert into Student first
         // INSERT INTO Student(ID, Name, Gender, DOB, Ethnicity, PoliticalAffiliation)
         // VALUES ('123456200211212333', 'Ezra Bridger', '男', '2002-11-21', '汉', '共青团员');
         String sql = "INSERT INTO Student(ID, Name, Gender, DOB, Ethnicity, PoliticalAffiliation) VALUES (?, ?, ?, ?, ?, ?)";
         boolean success = false;
-        try (
-                PreparedStatement ps = connection.prepareStatement(sql)
-        ) {
-            ps.setString(1, student.getID());
-            ps.setString(2, student.getName());
-            ps.setString(3, student.getGender());
-            ps.setDate(4, student.getDOB());
-            ps.setString(5, student.getEthnicity());
-            ps.setString(6, student.getPoliticalAffiliation());
-            success = ps.executeUpdate() == 1;
+        try (Connection conn = DBConnection.getConnection(true)) {
+            // both insertions should be successful at the same time
+            conn.setAutoCommit(false);
+            try (
+                PreparedStatement ps = conn.prepareStatement(sql)
+            ) {
+                ps.setString(1, student.getID());
+                ps.setString(2, student.getName());
+                ps.setString(3, student.getGender());
+                ps.setDate(4, student.getDOB());
+                ps.setString(5, student.getEthnicity());
+                ps.setString(6, student.getPoliticalAffiliation());
+                success = ps.executeUpdate() == 1;
+            }
+            if (!success) {
+                return false;
+            }
+            // insert into Enrolment
+            // INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES ('PB21111738', '123456200211212333', '2021-09-01', '计算机科学与技术');
+            sql = "INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES (?, ?, ?, ?)";
+            try (
+                PreparedStatement ps = conn.prepareStatement(sql)
+            ) {
+                ps.setString(1, student.getStudentID());
+                ps.setString(2, student.getID());
+                ps.setDate(3, student.getEnrolmentDate());
+                ps.setString(4, student.getMajor());
+                success = ps.executeUpdate() == 1;
+            }
+            if (success) {
+                conn.commit();
+            } else {
+                conn.rollback();
+            }
+            return success;
         } catch (SQLException e) {
             DBConnection.SQLExceptionHandler(e);
             return false;
         }
-        if (!success) {
-            return false;
-        }
-        // insert into Enrolment
-        // INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES ('PB21111738', '123456200211212333', '2021-09-01', '计算机科学与技术');
-        sql = "INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES (?, ?, ?, ?)";
-        try (
-                PreparedStatement ps = connection.prepareStatement(sql)
-        ) {
-            ps.setString(1, student.getStudentID());
-            ps.setString(2, student.getID());
-            ps.setDate(3, student.getEnrolmentDate());
-            ps.setString(4, student.getMajor());
-            success = ps.executeUpdate() == 1;
-        } catch (SQLException e) {
-            DBConnection.SQLExceptionHandler(e);
-            return false;
-        }
-        return success;
     }
 
-    public boolean deleteStudent(String studentID) {
+    public static boolean deleteStudent(String studentID) {
         // CALL DeleteStudent('PB22011111');
-        return callProcedure("DeleteStudent", studentID);
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return callProcedure("DeleteStudent", studentID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
     }
 
     public static void main(String[] args) {
-        StudentDAO studentDAO = new StudentDAO();
-        List<String> studentIDs = studentDAO.queryStudentIDsASEC();
+        List<String> studentIDs = queryStudentIDsASEC();
         for (String studentID : studentIDs) {
             System.out.println(studentID);
         }

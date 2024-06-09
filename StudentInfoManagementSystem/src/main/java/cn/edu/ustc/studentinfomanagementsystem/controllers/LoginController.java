@@ -12,8 +12,6 @@ import cn.edu.ustc.studentinfomanagementsystem.SceneManager;
 import java.io.IOException;
 
 public class LoginController extends Controller {
-    private final AccountDAO accountDAO = new AccountDAO();
-
     @FXML private AnchorPane anchorPane;
 
     @FXML private Label label;
@@ -43,7 +41,7 @@ public class LoginController extends Controller {
         switch (userType) {
             case "教师" -> {
                 // Query account info from the database
-                String authenticateResult = accountDAO.authenticateTeacher(username, password);
+                String authenticateResult = AccountDAO.authenticateTeacher(username, password);
                 switch (authenticateResult) {
                     case "Success." -> {
                         // Switch to teacher view
@@ -82,7 +80,7 @@ public class LoginController extends Controller {
             }
             case "学生" -> {
                 // Query account info from the database
-                String authenticateResult = accountDAO.authenticateStudent(username, password);
+                String authenticateResult = AccountDAO.authenticateStudent(username, password);
                 switch (authenticateResult) {
                     case "Success." -> {
                         // Switch to student view

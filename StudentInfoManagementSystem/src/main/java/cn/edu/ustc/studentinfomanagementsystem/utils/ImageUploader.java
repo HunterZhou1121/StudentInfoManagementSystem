@@ -23,16 +23,6 @@ public class ImageUploader {
 
     private static final String UID = "081a11e22460efe0cebd44e8e6972137";
 
-    private Connection connection;
-
-    public ImageUploader() {
-        try {
-            connection = DBConnection.getInstance().getConnection();
-        } catch (SQLException e) {
-            DBConnection.SQLExceptionHandler(e);
-        }
-    }
-
     public static @Nullable String uploadImage(File file) {
         if (!file.exists()) {
             return null;
@@ -85,8 +75,9 @@ public class ImageUploader {
         String sql = "SELECT Enrolment.StudentID FROM Enrolment, Student WHERE Enrolment.ID = Student.ID AND Student.PhotoURL IS NULL";
         // test connection
         try (
-                PreparedStatement ps = connection.prepareStatement(sql);
-                ResultSet rs = ps.executeQuery()
+            Connection conn = DBConnection.getConnection(true);
+            PreparedStatement ps = conn.prepareStatement(sql);
+            ResultSet rs = ps.executeQuery()
         ) {
             while (rs.next()) {
                 String StudentID = rs.getString("StudentID");
@@ -104,7 +95,7 @@ public class ImageUploader {
                 // query the student's ID from Enrolment, using StudentID
                 String querySQL = "SELECT ID FROM Enrolment WHERE StudentID = ?";
                 String ID = "";
-                try (PreparedStatement queryPS = connection.prepareStatement(querySQL)) {
+                try (PreparedStatement queryPS = conn.prepareStatement(querySQL)) {
                     queryPS.setString(1, StudentID);
                     try (ResultSet queryRS = queryPS.executeQuery()) {
                         if (queryRS.next()) {
@@ -116,7 +107,7 @@ public class ImageUploader {
                 }
                 // update the database
                 String updateSQL = "UPDATE Student SET PhotoURL = ? WHERE ID = ?";
-                try (PreparedStatement updatePS = connection.prepareStatement(updateSQL)) {
+                try (PreparedStatement updatePS = conn.prepareStatement(updateSQL)) {
                     updatePS.setString(1, url);
                     updatePS.setString(2, ID);
                     updatePS.executeUpdate();

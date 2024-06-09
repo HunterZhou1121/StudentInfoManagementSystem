@@ -20,12 +20,6 @@ import java.sql.Date;
 public class StudentController extends Controller {
     private Student student;
 
-    private final StudentDAO studentDAO = new StudentDAO();
-
-    private final AwardPunishmentDAO awardPunishmentDAO = new AwardPunishmentDAO();
-
-    private final CourseDAO courseDAO = new CourseDAO();
-
     @FXML private Label welcomeLabel;
 
     @FXML private Button logoutButton;
@@ -183,7 +177,7 @@ public class StudentController extends Controller {
         String oldPhoneNumber = student.getPhoneNumber();
         String newPhoneNumber = phoneNumberTextField.getText();
         student.setPhoneNumber(newPhoneNumber);
-        if (studentDAO.updateStudentPhoneNumber(newPhoneNumber, student.getID())) {
+        if (StudentDAO.updateStudentPhoneNumber(newPhoneNumber, student.getID())) {
             showAlert("更新成功", "手机号码更新成功！");
         } else {
             student.setPhoneNumber(oldPhoneNumber);
@@ -201,7 +195,7 @@ public class StudentController extends Controller {
         String oldEmail = student.getEmail();
         String newEmail = emailTextField.getText();
         student.setEmail(newEmail);
-        if (studentDAO.updateStudentEmail(newEmail, student.getID())) {
+        if (StudentDAO.updateStudentEmail(newEmail, student.getID())) {
             showAlert("更新成功", "电子邮箱更新成功！");
         } else {
             student.setEmail(oldEmail);
@@ -232,7 +226,7 @@ public class StudentController extends Controller {
             return;
         }
         student.setPhotoURL(newPhotoURL);
-        if (studentDAO.updateStudentPhotoURL(newPhotoURL, student.getID())) {
+        if (StudentDAO.updateStudentPhotoURL(newPhotoURL, student.getID())) {
             loadImageView();
             showAlert("更新成功", "照片更新成功！");
         } else {
@@ -256,41 +250,12 @@ public class StudentController extends Controller {
 
     // set student queried from the database with studentID
     public void setStudent(@NotNull String studentID) {
-        this.student = studentDAO.queryStudent(studentID);
+        this.student = StudentDAO.queryStudent(studentID);
     }
 
     // set student to null
     public void setStudent() {
         this.student = null;
-    }
-
-    // setters for flags
-    public void setWelcomeLabelLoaded(boolean welcomeLabelLoaded) {
-        this.welcomeLabelLoaded = welcomeLabelLoaded;
-    }
-
-    public void setBasicInfoLoaded(boolean basicInfoLoaded) {
-        this.basicInfoLoaded = basicInfoLoaded;
-    }
-
-    public void setAwardsLoaded(boolean awardsLoaded) {
-        this.awardsLoaded = awardsLoaded;
-    }
-
-    public void setPunishmentsLoaded(boolean punishmentsLoaded) {
-        this.punishmentsLoaded = punishmentsLoaded;
-    }
-
-    public void setSelectedCoursesLoaded(boolean selectedCoursesLoaded) {
-        this.selectedCoursesLoaded = selectedCoursesLoaded;
-    }
-
-    public void setGradesLoaded(boolean gradesLoaded) {
-        this.gradesLoaded = gradesLoaded;
-    }
-
-    public void setStatisticsLoaded(boolean statisticsLoaded) {
-        this.statisticsLoaded = statisticsLoaded;
     }
 
     // reset all flags
@@ -302,35 +267,6 @@ public class StudentController extends Controller {
         selectedCoursesLoaded = false;
         gradesLoaded = false;
         statisticsLoaded = false;
-    }
-
-    // getters for flags
-    public boolean isWelcomeLabelLoaded() {
-        return welcomeLabelLoaded;
-    }
-
-    public boolean isBasicInfoLoaded() {
-        return basicInfoLoaded;
-    }
-
-    public boolean isAwardsLoaded() {
-        return awardsLoaded;
-    }
-
-    public boolean isPunishmentsLoaded() {
-        return punishmentsLoaded;
-    }
-
-    public boolean isSelectedCoursesLoaded() {
-        return selectedCoursesLoaded;
-    }
-
-    public boolean isGradesLoaded() {
-        return gradesLoaded;
-    }
-
-    public boolean isStatisticsLoaded() {
-        return statisticsLoaded;
     }
 
     public void loadWelcomeLabel() {
@@ -360,6 +296,13 @@ public class StudentController extends Controller {
         basicInfoLoaded = true;
     }
 
+    public void loadBasicInfo(boolean force) {
+        if (force) {
+            basicInfoLoaded = false;
+        }
+        loadBasicInfo();
+    }
+
     public void loadImageView() {
         String photoURL = student.getPhotoURL();
         if (photoURL == null) {
@@ -373,53 +316,86 @@ public class StudentController extends Controller {
         if (student == null || awardsLoaded) {
             return;
         }
-        awardTableView.setItems(FXCollections.observableArrayList(awardPunishmentDAO.queryAwards(student.getStudentID())));
+        awardTableView.setItems(FXCollections.observableArrayList(AwardPunishmentDAO.queryAwards(student.getStudentID())));
         awardsLoaded = true;
+    }
+
+    public void loadAwards(boolean force) {
+        if (force) {
+            awardsLoaded = false;
+        }
+        loadAwards();
     }
 
     public void loadPunishments() {
         if (student == null || punishmentsLoaded) {
             return;
         }
-        punishmentTableView.setItems(FXCollections.observableArrayList(awardPunishmentDAO.queryPunishments(student.getStudentID())));
+        punishmentTableView.setItems(FXCollections.observableArrayList(AwardPunishmentDAO.queryPunishments(student.getStudentID())));
         punishmentsLoaded = true;
+    }
+
+    public void loadPunishments(boolean force) {
+        if (force) {
+            punishmentsLoaded = false;
+        }
+        loadPunishments();
     }
 
     public void loadSelectedCourses() {
         if (student == null || selectedCoursesLoaded) {
             return;
         }
-        selectedCourseTableView.setItems(FXCollections.observableArrayList(courseDAO.querySelectedCourses(student.getStudentID())));
+        selectedCourseTableView.setItems(FXCollections.observableArrayList(CourseDAO.querySelectedCourses(student.getStudentID())));
         selectedCoursesLoaded = true;
+    }
+
+    public void loadSelectedCourses(boolean force) {
+        if (force) {
+            selectedCoursesLoaded = false;
+        }
+        loadSelectedCourses();
     }
 
     public void loadGrades() {
         if (student == null || gradesLoaded) {
             return;
         }
-        gradeTableView.setItems(FXCollections.observableArrayList(courseDAO.queryGrades(student.getStudentID())));
+        gradeTableView.setItems(FXCollections.observableArrayList(CourseDAO.queryGrades(student.getStudentID())));
         gradesLoaded = true;
+    }
+
+    public void loadGrades(boolean force) {
+        if (force) {
+            gradesLoaded = false;
+        }
+        loadGrades();
     }
 
     public void loadPassedCredits() {
         if (student == null) {
             return;
         }
-        setText(passedCreditsTextField, courseDAO.getPassedCredits(student.getStudentID()));
+        setText(passedCreditsTextField, CourseDAO.getPassedCredits(student.getStudentID()));
     }
 
     public void loadFailedCourseNumber() {
         if (student == null) {
             return;
         }
-        setText(failedCourseNumberTextField, courseDAO.getFailedCourseNum(student.getStudentID()).toString());
+        Integer failedCourseNum = CourseDAO.getFailedCourseNum(student.getStudentID());
+        if (failedCourseNum == null) {
+            clearText(failedCourseNumberTextField);
+            return;
+        }
+        setText(failedCourseNumberTextField, failedCourseNum.toString());
     }
 
     public void loadFailedCredits() {
         if (student == null) {
             return;
         }
-        setText(failedCreditsTextField, courseDAO.getFailedCredits(student.getStudentID()));
+        setText(failedCreditsTextField, CourseDAO.getFailedCredits(student.getStudentID()));
     }
 
     public void loadWeightedAverageScore() {
@@ -427,7 +403,7 @@ public class StudentController extends Controller {
             return;
         }
         // weighted average score can be null when there are no scores
-        Float weightedAverageScore = courseDAO.getWeightedAverageScore(student.getStudentID());
+        Float weightedAverageScore = CourseDAO.getWeightedAverageScore(student.getStudentID());
         if (weightedAverageScore == null) {
             clearText(weightedAverageScoreTextField);
             return;
@@ -444,6 +420,13 @@ public class StudentController extends Controller {
         loadFailedCredits();
         loadWeightedAverageScore();
         statisticsLoaded = true;
+    }
+
+    public void loadStatistics(boolean force) {
+        if (force) {
+            statisticsLoaded = false;
+        }
+        loadStatistics();
     }
 
 }

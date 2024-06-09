@@ -38,6 +38,14 @@ public class DBConnection {
         return connection;
     }
 
+    public static Connection getConnection(boolean newConnection) throws SQLException {
+        if (newConnection) {
+            return DriverManager.getConnection(URL, USER, PASSWORD);
+        } else {
+            return getInstance().getConnection();
+        }
+    }
+
     // close connection
     public static void close(Connection connection) {
         if (connection != null) {
@@ -99,7 +107,8 @@ public class DBConnection {
         String studentID = "PB21111738";
         // test connection
         try (
-            PreparedStatement ps = getInstance().getConnection().prepareStatement(sql)
+            Connection conn = getConnection(true);
+            PreparedStatement ps = conn.prepareStatement(sql)
         ) {
             // replace the first placeholder with studentID
             ps.setString(1, studentID);

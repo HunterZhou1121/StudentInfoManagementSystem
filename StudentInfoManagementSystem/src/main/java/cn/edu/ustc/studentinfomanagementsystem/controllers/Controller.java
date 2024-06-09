@@ -31,16 +31,11 @@ public class Controller {
         }
     }
 
-//    public void setImage(@NotNull ImageView iv, Image i) {
-//        iv.setImage(i);
-//    }
-
     public void setImage(@NotNull ImageView iv, String url) {
         if (url == null) {
             iv.setImage(null);
             return;
         }
-//        setImage(iv, new Image(url));
         new Thread(() -> {
             try {
                 Image image = new Image(url);
@@ -51,14 +46,6 @@ public class Controller {
             }
         }
         ).start();
-    }
-
-    public void setDate(@NotNull DatePicker dp, Date date) {
-        if (date == null) {
-            dp.setValue(null);
-            return;
-        }
-        dp.setValue(date.toLocalDate());
     }
 
     public void setComboBox(@NotNull ComboBox<String> cb, List<String> list) {

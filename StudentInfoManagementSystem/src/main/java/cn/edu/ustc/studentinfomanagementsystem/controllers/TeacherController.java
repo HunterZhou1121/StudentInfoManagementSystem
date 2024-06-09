@@ -4,10 +4,13 @@ import cn.edu.ustc.studentinfomanagementsystem.DAO.AwardPunishmentDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.CourseDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.StudentDAO;
 import cn.edu.ustc.studentinfomanagementsystem.SceneManager;
+import cn.edu.ustc.studentinfomanagementsystem.models.Award;
+import cn.edu.ustc.studentinfomanagementsystem.models.Punishment;
 import cn.edu.ustc.studentinfomanagementsystem.models.Student;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
+import javafx.scene.control.cell.PropertyValueFactory;
 import javafx.scene.image.ImageView;
 
 import java.sql.Date;
@@ -145,13 +148,11 @@ public class TeacherController extends Controller {
         "数据科学与大数据技术"
     );
 
+    private static final List<String> AWARD_LEVELS = List.of(
+        "院级", "校级", "市级", "省级", "国家级"
+    );
+
     private String teacherUsername;
-
-    private StudentDAO studentDAO = new StudentDAO();
-
-    private AwardPunishmentDAO awardPunishmentDAO = new AwardPunishmentDAO();
-
-    private CourseDAO courseDAO = new CourseDAO();
 
     private Student currentStudent;
 
@@ -175,7 +176,7 @@ public class TeacherController extends Controller {
 
     @FXML private ComboBox<String> majorComboBox;
 
-    @FXML private DatePicker enrolmentDatePicker;
+//    @FXML private DatePicker enrolmentDatePicker;
 
     @FXML private TextField enrolmentDateTextField;
 
@@ -213,6 +214,73 @@ public class TeacherController extends Controller {
 
     @FXML private ComboBox<String> newMajorComboBox;
 
+    // the second level
+    @FXML private TabPane teacherAwardPunishmentTabPane;
+
+    // query
+    // award
+    @FXML private TableView<Award> awardTableView;
+
+    @FXML private TableColumn<Award, String> awardNameTableColumn;
+
+    @FXML private TableColumn<Award, String> awardLevelTableColumn;
+
+    @FXML private TableColumn<Award, Date> awardDateTableColumn;
+
+    // punishment
+    @FXML private TableView<Punishment> punishmentTableView;
+
+    @FXML private TableColumn<Punishment, String> punishmentNameTableColumn;
+
+    @FXML private TableColumn<Punishment, Date> punishmentDateTableColumn;
+
+    // add
+    // award
+    @FXML private TextField newAwardStudentIDTextField;
+
+    @FXML private TextField newAwardNameTextField;
+
+    @FXML private ComboBox<String> newAwardLevelComboBox;
+
+    @FXML private DatePicker newAwardDatePicker;
+
+    // punishment
+    @FXML private TextField newPunishmentStudentIDTextField;
+
+    @FXML private TextField newPunishmentNameTextField;
+
+    @FXML private DatePicker newPunishmentDatePicker;
+
+    // update
+    // award
+    @FXML private TextField updateAwardStudentIDTextField;
+
+    @FXML private TextField updateAwardOldNameTextField;
+
+    @FXML private TextField updateAwardNewNameTextField;
+
+    @FXML private ComboBox<String> updateAwardNewLevelComboBox;
+
+    @FXML private DatePicker updateAwardNewDatePicker;
+    // punishment
+    @FXML private TextField updatePunishmentStudentIDTextField;
+
+    @FXML private TextField updatePunishmentOldNameTextField;
+
+    @FXML private TextField updatePunishmentNewNameTextField;
+
+    @FXML private DatePicker updatePunishmentNewDatePicker;
+
+    // delete
+    // award
+    @FXML private TextField deleteAwardStudentIDTextField;
+
+    @FXML private TextField deleteAwardNameTextField;
+
+    // punishment
+    @FXML private TextField deletePunishmentStudentIDTextField;
+
+    @FXML private TextField deletePunishmentNameTextField;
 
 
     private boolean welcomeLabelLoaded = false;
@@ -223,148 +291,30 @@ public class TeacherController extends Controller {
 
     private boolean studentIDComboBoxLoaded = false;
 
+    private boolean awardsLoaded = false;
+
+    private boolean punishmentsLoaded = false;
+
+    private boolean awardLevelComboBoxesLoaded = false;
+
     @FXML
     private void initialize() {
-        // set the items of the ComboBoxes
-        // gender
-//        genderComboBox.setItems(FXCollections.observableArrayList("男", "女"));
-//        genderComboBox.setItems(FXCollections.observableArrayList(GENDERS));
-        // ethnicity
-//        ethnicityComboBox.setItems(FXCollections.observableArrayList(
-//            "汉族",
-//            "蒙古族",
-//            "回族",
-//            "藏族",
-//            "维吾尔族",
-//            "苗族",
-//            "彝族",
-//            "壮族",
-//            "布依族",
-//            "朝鲜族",
-//            "满族",
-//            "侗族",
-//            "瑶族",
-//            "白族",
-//            "土家族",
-//            "哈尼族",
-//            "哈萨克族",
-//            "傣族",
-//            "黎族",
-//            "傈僳族",
-//            "佤族",
-//            "畲族",
-//            "高山族",
-//            "拉祜族",
-//            "水族",
-//            "东乡族",
-//            "纳西族",
-//            "景颇族",
-//            "柯尔克孜族",
-//            "土族",
-//            "达斡尔族",
-//            "仫佬族",
-//            "羌族",
-//            "布朗族",
-//            "撒拉族",
-//            "毛南族",
-//            "仡佬族",
-//            "锡伯族",
-//            "阿昌族",
-//            "普米族",
-//            "塔吉克族",
-//            "怒族",
-//            "乌孜别克族",
-//            "俄罗斯族",
-//            "鄂温克族",
-//            "德昂族",
-//            "保安族",
-//            "裕固族",
-//            "京族",
-//            "塔塔尔族",
-//            "独龙族",
-//            "鄂伦春族",
-//            "赫哲族",
-//            "门巴族",
-//            "珞巴族",
-//            "基诺族"
-//        ));
-//        ethnicityComboBox.setItems(FXCollections.observableArrayList(ETHNICITIES));
-        // political affiliation
-//        politicalAffiliationComboBox.setItems(FXCollections.observableArrayList(
-//            "中共党员",
-//            "中共预备党员",
-//            "共青团员",
-//            "民革会员",
-//            "民盟盟员",
-//            "民建会员",
-//            "民进会员",
-//            "农工党党员",
-//            "致公党党员",
-//            "九三学社社员",
-//            "台盟盟员",
-//            "无党派民主人士",
-//            "群众"
-//        ));
-//        politicalAffiliationComboBox.setItems(FXCollections.observableArrayList(POLITICAL_AFFILIATIONS));
-        // major
-//        majorComboBox.setItems(FXCollections.observableArrayList(
-//            "数学与应用数学",
-//            "信息与计算科学",
-//            "物理学",
-//            "应用物理学",
-//            "天文学",
-//            "光电信息科学与工程",
-//            "工商管理",
-//            "信息管理与信息系统",
-//            "管理科学",
-//            "金融学",
-//            "统计学",
-//            "化学",
-//            "材料物理",
-//            "材料化学",
-//            "高分子材料与工程",
-//            "地球物理学",
-//            "大气科学",
-//            "空间科学与技术",
-//            "地球化学",
-//            "行星科学",
-//            "环境科学",
-//            "理论与应用力学",
-//            "机械设计制造及其自动化",
-//            "测控技术与仪器",
-//            "能源与动力工程",
-//            "安全工程",
-//            "英语",
-//            "考古学",
-//            "传播学",
-//            "网络与新媒体",
-//            "核工程与核技术",
-//            "工程物理",
-//            "应用物理学",
-//            "环境科学与工程",
-//            "量子信息科学",
-//            "生物科学",
-//            "生物技术",
-//            "临床医学",
-//            "电子信息工程",
-//            "通信工程",
-//            "自动化",
-//            "人工智能",
-//            "计算机科学与技术",
-//            "软件工程",
-//            "电子科学与技术",
-//            "信息安全",
-//            "网络空间安全",
-//            "数据科学与大数据技术"
-//        ));
-//        majorComboBox.setItems(FXCollections.observableArrayList(MAJORS));
+        // set the columns for tables
+        // award
+        awardNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("awardName"));
+        awardLevelTableColumn.setCellValueFactory(new PropertyValueFactory<>("awardLevel"));
+        awardDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("awardDate"));
+        // punishment
+        punishmentNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("punishmentName"));
+        punishmentDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("punishmentDate"));
+        // initialize the first ComboBox
         initializeStudentQueryComboBoxes();
         // listeners for the 1st level tab pane
         teacherTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
             switch (newValue.getText()) {
                 case "学生信息" -> {
                     // consider 2nd level tab pane
-                    String subTabName = teacherStudentInfoTabPane.getSelectionModel().selectedItemProperty().getName();
+                    String subTabName = teacherStudentInfoTabPane.getSelectionModel().selectedItemProperty().getValue().getText();
                     switch (subTabName) {
                         case "查询" -> {
                             // load studentIDs
@@ -374,6 +324,26 @@ public class TeacherController extends Controller {
                         case "添加" -> {
                             // load the ComboBoxes
                             initializeStudentAddComboBoxes();
+                        }
+                    }
+                }
+                case "奖惩情况" -> {
+                    // consider 2nd level tab pane
+                    String subTabName = teacherAwardPunishmentTabPane.getSelectionModel().selectedItemProperty().getValue().getText();
+                    switch (subTabName) {
+                        case "查询" -> {
+                            // load award and punishment table views
+                            loadAwards();
+                            loadPunishments();
+                        }
+                        case "添加" -> {
+                            initializeAwardLevelComboBoxes();
+                        }
+                        case "修改" -> {
+                            initializeAwardLevelComboBoxes();
+                        }
+                        case "删除" -> {
+
                         }
                     }
                 }
@@ -394,12 +364,34 @@ public class TeacherController extends Controller {
                 }
             }
         });
+
+        teacherAwardPunishmentTabPane.getSelectionModel().selectedItemProperty().addListener((observable, oldValue, newValue) -> {
+            switch (newValue.getText()) {
+                case "查询" -> {
+                    // load award and punishment table views
+                    loadAwards();
+                    loadPunishments();
+                }
+                case "添加" -> {
+                    initializeAwardLevelComboBoxes();
+                }
+                case "修改" -> {
+                    initializeAwardLevelComboBoxes();
+                }
+                case "删除" -> {
+
+                }
+            }
+        });
     }
+
 
     @FXML
     private void handleLogoutButtonAction() {
-        // reset the student
+        // reset the fields of this controller
         setTeacherUsername(null);
+        setCurrentStudent(null);
+        resetFlags();
         // switch to the login view
         SceneManager.getInstance().switchScene("login-view");
         // delete the student view
@@ -409,31 +401,41 @@ public class TeacherController extends Controller {
     }
 
     @FXML
-    private void handleQueryButtonAction() {
+    private void handleQueryStudentButtonAction() {
         String studentID = studentIDComboBox.getValue();
         if (studentID == null) {
             showAlert("查询失败", "请先选择待查询学生学号！");
             return;
         }
-        Student student = studentDAO.queryStudent(studentID);
+        Student student = StudentDAO.queryStudent(studentID);
         if (student == null) {
             showAlert("查询失败", "未查询到该学号对应学生的信息！");
             return;
         }
         currentStudent = student;
         loadStudentInfo();
+        // tables need reloading
+        awardsLoaded = false;
+        punishmentsLoaded = false;
     }
 
     @FXML
     private void handleRefreshButtonAction() {
         // reload studentIDs, clear other info
         loadStudentIDComboBox(true);
-        clearStudentQueryInfo();
+        resetFlags();
+        clearStudentQueryInfo();    // note that currentStudent is set to null
         clearStudentAddInfo();
+        clearAwardPunishmentAddInfo();
+        clearAwardPunishmentUpdateInfo();
+        clearAwardPunishmentDeleteInfo();
+        // reload the tables
+        loadAwards();
+        loadPunishments();
     }
 
     @FXML
-    private void handleSubmitButtonAction() {
+    private void handleSubmitStudentButtonAction() {
         // show confirmation first
         Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认添加该学生？");
         if (confirmation.isPresent()) {
@@ -465,6 +467,7 @@ public class TeacherController extends Controller {
                 ethnicity == null || politicalAffiliation == null || studentID == null ||
                 enrolmentDate == null || major == null) {
             showAlert("添加失败", "请填写所有信息！");
+            return;
         }
         // create a new student
         Student student = new Student(
@@ -472,7 +475,7 @@ public class TeacherController extends Controller {
                 politicalAffiliation, studentID, Date.valueOf(enrolmentDate), major
         );
         // insert the student into the database
-        boolean success = studentDAO.insertStudent(student);
+        boolean success = StudentDAO.insertStudent(student);
         if (success) {
             showAlert("添加成功", "添加成功！");
             // the studentID ComboBox needs reloading
@@ -483,7 +486,7 @@ public class TeacherController extends Controller {
     }
 
     @FXML
-    private void handleDeleteButtonAction() {
+    private void handleDeleteStudentButtonAction() {
         // get the current selected studentID
         String studentID = studentIDComboBox.getValue();
         if (studentID == null) {
@@ -508,7 +511,7 @@ public class TeacherController extends Controller {
             }
         }
         // call the procedure to delete the student
-        boolean success = studentDAO.deleteStudent(studentID);
+        boolean success = StudentDAO.deleteStudent(studentID);
         if (success) {
             showAlert("删除成功", "删除成功！");
             // force reload the studentID ComboBox
@@ -520,12 +523,271 @@ public class TeacherController extends Controller {
         }
     }
 
-    public String getTeacherUsername() {
-        return teacherUsername;
+    @FXML public void handleAddAwardButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认添加该奖项？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = newAwardStudentIDTextField.getText();
+        String awardName = newAwardNameTextField.getText();
+        String awardLevel = newAwardLevelComboBox.getValue();
+        LocalDate awardDate = newAwardDatePicker.getValue();
+        if (studentID == null || awardName == null || awardLevel == null) {
+            showAlert("添加失败", "请填写所有信息！");
+            return;
+        }
+        // create a new award
+        Award award = new Award(studentID, awardName, awardLevel);
+        if (awardDate != null) {
+            award.setAwardDate(Date.valueOf(awardDate));
+        }
+        // insert the award into the database
+        boolean success = AwardPunishmentDAO.insertAward(award);
+        if (success) {
+            showAlert("添加成功", "添加成功！");
+            // the award table view needs reloading
+            awardsLoaded = false;
+        } else {
+            showAlert("添加失败", "添加失败！");
+        }
+    }
+
+    @FXML
+    public void handleAddPunishmentButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认添加该惩罚？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = newPunishmentStudentIDTextField.getText();
+        String punishmentName = newPunishmentNameTextField.getText();
+        LocalDate punishmentDate = newPunishmentDatePicker.getValue();
+        if (studentID == null || punishmentName == null) {
+            showAlert("添加失败", "请填写所有信息！");
+            return;
+        }
+        // create a new punishment
+        Punishment punishment = new Punishment(studentID, punishmentName);
+        if (punishmentDate != null) {
+            punishment.setPunishmentDate(Date.valueOf(punishmentDate));
+        }
+        // insert the punishment into the database
+        boolean success = AwardPunishmentDAO.insertPunishment(punishment);
+        if (success) {
+            showAlert("添加成功", "添加成功！");
+            // the punishment table view needs reloading
+            punishmentsLoaded = false;
+        } else {
+            showAlert("添加失败", "添加失败！");
+        }
+    }
+
+    @FXML
+    public void handleUpdateAwardButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认更新该奖项？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = updateAwardStudentIDTextField.getText();
+        String oldAwardName = updateAwardOldNameTextField.getText();
+        String newAwardName = updateAwardNewNameTextField.getText();
+        String newAwardLevel = updateAwardNewLevelComboBox.getValue();
+        LocalDate newAwardDate = updateAwardNewDatePicker.getValue();
+        if (studentID == null) {
+            showAlert("更新失败", "请填写学生学号！");
+            return;
+        }
+        if (oldAwardName == null) {
+            showAlert("更新失败", "请填写原奖项名称！");
+            return;
+        }
+        // at least one field should be updated
+        if (newAwardName == null && newAwardLevel == null && newAwardDate == null) {
+            showAlert("更新失败", "请填写至少一个新的奖项信息！");
+            return;
+        }
+        // update the award
+        boolean success;
+        if (newAwardDate == null) {
+            success = AwardPunishmentDAO.updateAward(studentID, oldAwardName, newAwardName, newAwardLevel, null);
+        } else {
+            success = AwardPunishmentDAO.updateAward(studentID, oldAwardName, newAwardName, newAwardLevel, Date.valueOf(newAwardDate));
+        }
+        if (success) {
+            showAlert("更新成功", "更新成功！");
+            // the award table view needs reloading
+            awardsLoaded = false;
+        } else {
+            showAlert("更新失败", "更新失败！");
+        }
+    }
+
+    @FXML
+    private void handleUpdatePunishmentButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认更新该惩罚？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = updatePunishmentStudentIDTextField.getText();
+        String oldPunishmentName = updatePunishmentOldNameTextField.getText();
+        String newPunishmentName = updatePunishmentNewNameTextField.getText();
+        LocalDate newPunishmentDate = updatePunishmentNewDatePicker.getValue();
+        if (studentID == null) {
+            showAlert("更新失败", "请填写学生学号！");
+            return;
+        }
+        if (oldPunishmentName == null) {
+            showAlert("更新失败", "请填写原惩罚名称！");
+            return;
+        }
+        // at least one field should be updated
+        if (newPunishmentName == null && newPunishmentDate == null) {
+            showAlert("更新失败", "请填写至少一个新的惩罚信息！");
+            return;
+        }
+        // update the punishment
+        boolean success;
+        if (newPunishmentDate == null) {
+            success = AwardPunishmentDAO.updatePunishment(studentID, oldPunishmentName, newPunishmentName, null);
+        } else {
+            success = AwardPunishmentDAO.updatePunishment(studentID, oldPunishmentName, newPunishmentName, Date.valueOf(newPunishmentDate));
+        }
+        if (success) {
+            showAlert("更新成功", "更新成功！");
+            // the punishment table view needs reloading
+            punishmentsLoaded = false;
+        } else {
+            showAlert("更新失败", "更新失败！");
+        }
+    }
+
+    public void handleDeleteAwardButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认删除该奖项？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = deleteAwardStudentIDTextField.getText();
+        String awardName = deleteAwardNameTextField.getText();
+        if (studentID == null || awardName == null) {
+            showAlert("删除失败", "请填写所有信息！");
+            return;
+        }
+        // delete the award
+        boolean success = AwardPunishmentDAO.deleteAward(studentID, awardName);
+        if (success) {
+            showAlert("删除成功", "删除成功！");
+            // the award table view needs reloading
+            awardsLoaded = false;
+        } else {
+            showAlert("删除失败", "删除失败！");
+        }
+    }
+
+    public void handleDeletePunishmentButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认删除该惩罚？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = deletePunishmentStudentIDTextField.getText();
+        String punishmentName = deletePunishmentNameTextField.getText();
+        if (studentID == null || punishmentName == null) {
+            showAlert("删除失败", "请填写所有信息！");
+            return;
+        }
+        // delete the punishment
+        boolean success = AwardPunishmentDAO.deletePunishment(studentID, punishmentName);
+        if (success) {
+            showAlert("删除成功", "删除成功！");
+            // the punishment table view needs reloading
+            punishmentsLoaded = false;
+        } else {
+            showAlert("删除失败", "删除失败！");
+        }
     }
 
     public void setTeacherUsername(String teacherUsername) {
         this.teacherUsername = teacherUsername;
+    }
+
+    public void setCurrentStudent(Student currentStudent) {
+        this.currentStudent = currentStudent;
     }
 
     public void initializeStudentQueryComboBoxes() {
@@ -550,6 +812,15 @@ public class TeacherController extends Controller {
         studentAddComboBoxesLoaded = true;
     }
 
+    public void initializeAwardLevelComboBoxes() {
+        if (awardLevelComboBoxesLoaded) {
+            return;
+        }
+        setComboBox(newAwardLevelComboBox, AWARD_LEVELS);
+        setComboBox(updateAwardNewLevelComboBox, AWARD_LEVELS);
+        awardLevelComboBoxesLoaded = true;
+    }
+
     public void loadWelcomeLabel() {
         if (teacherUsername == null || welcomeLabelLoaded) {
             return;
@@ -561,7 +832,7 @@ public class TeacherController extends Controller {
     public void loadStudentIDComboBox() {
         if (studentIDComboBoxLoaded)
             return;
-        List<String> studentIDs = studentDAO.queryStudentIDsASEC();
+        List<String> studentIDs = StudentDAO.queryStudentIDsASEC();
         studentIDComboBox.setItems(FXCollections.observableArrayList(studentIDs));
         studentIDComboBoxLoaded = true;
     }
@@ -580,6 +851,7 @@ public class TeacherController extends Controller {
         }
         setImage(photoImageView, photoURL);
     }
+
     public void loadStudentInfo() {
         Student student = currentStudent;
         if (student == null) {
@@ -595,9 +867,46 @@ public class TeacherController extends Controller {
         setText(phoneNumberTextField, student.getPhoneNumber());
         setText(emailTextField, student.getEmail());
         setText(studentIDTextField, student.getStudentID());
-//        setDate(enrolmentDatePicker, student.getEnrolmentDate());
         setText(enrolmentDateTextField, student.getEnrolmentDate().toString());
         setText(majorComboBox, student.getMajor());
+    }
+
+    public void loadAwards() {
+        if (awardsLoaded) {
+            return;
+        }
+        if (currentStudent == null) {
+            awardTableView.setItems(FXCollections.observableArrayList());
+            return;
+        }
+        awardTableView.setItems(FXCollections.observableArrayList(AwardPunishmentDAO.queryAwards(currentStudent.getStudentID())));
+        awardsLoaded = true;
+    }
+
+    public void loadAwards(boolean force) {
+        if (force) {
+            awardsLoaded = false;
+        }
+        loadAwards();
+    }
+
+    public void loadPunishments() {
+        if (punishmentsLoaded) {
+            return;
+        }
+        if (currentStudent == null) {
+            punishmentTableView.setItems(FXCollections.observableArrayList());
+            return;
+        }
+        punishmentTableView.setItems(FXCollections.observableArrayList(AwardPunishmentDAO.queryPunishments(currentStudent.getStudentID())));
+        punishmentsLoaded = true;
+    }
+
+    public void loadPunishments(boolean force) {
+        if (force) {
+            punishmentsLoaded = false;
+        }
+        loadPunishments();
     }
 
     public void clearStudentQueryInfo() {
@@ -613,7 +922,6 @@ public class TeacherController extends Controller {
         clear(phoneNumberTextField);
         clear(emailTextField);
         clear(studentIDTextField);
-//        clear(enrolmentDatePicker);
         clear(enrolmentDateTextField);
         clear(majorComboBox);
     }
@@ -630,6 +938,48 @@ public class TeacherController extends Controller {
         clear(newMajorComboBox);
     }
 
+    public void clearAwardPunishmentAddInfo() {
+        clear(newAwardStudentIDTextField);
+        clear(newAwardNameTextField);
+        clear(newAwardLevelComboBox);
+        clear(newAwardDatePicker);
+
+        clear(newPunishmentStudentIDTextField);
+        clear(newPunishmentNameTextField);
+        clear(newPunishmentDatePicker);
+    }
+
+    public void clearAwardPunishmentUpdateInfo() {
+        clear(updateAwardStudentIDTextField);
+        clear(updateAwardOldNameTextField);
+        clear(updateAwardNewNameTextField);
+        clear(updateAwardNewLevelComboBox);
+        clear(updateAwardNewDatePicker);
+
+        clear(updatePunishmentStudentIDTextField);
+        clear(updatePunishmentOldNameTextField);
+        clear(updatePunishmentNewNameTextField);
+        clear(updatePunishmentNewDatePicker);
+    }
+
+    public void clearAwardPunishmentDeleteInfo() {
+        clear(deleteAwardStudentIDTextField);
+        clear(deleteAwardNameTextField);
+
+        clear(deletePunishmentStudentIDTextField);
+        clear(deletePunishmentNameTextField);
+    }
+
+    public void resetFlags() {
+        welcomeLabelLoaded = false;
+        studentQueryComboBoxesLoaded = false;
+        studentAddComboBoxesLoaded = false;
+        studentIDComboBoxLoaded = false;
+        awardsLoaded = false;
+        punishmentsLoaded = false;
+        awardLevelComboBoxesLoaded = false;
+    }
+
     public void updateStudentName() {
         if (currentStudent == null) {
             return;
@@ -640,7 +990,7 @@ public class TeacherController extends Controller {
             return;
         }
         String ID = currentStudent.getID();
-        boolean success = studentDAO.updateStudentName(newName, ID);
+        boolean success = StudentDAO.updateStudentName(newName, ID);
         currentStudent.setName(newName);
         if (success) {
             showAlert("更新成功", "姓名更新成功！");
@@ -662,7 +1012,7 @@ public class TeacherController extends Controller {
             return;
         }
         String ID = currentStudent.getID();
-        boolean success = studentDAO.updateStudentGender(newGender, ID);
+        boolean success = StudentDAO.updateStudentGender(newGender, ID);
         currentStudent.setGender(newGender);
         if (success) {
             showAlert("更新成功", "性别更新成功！");
@@ -684,7 +1034,7 @@ public class TeacherController extends Controller {
             return;
         }
         String ID = currentStudent.getID();
-        boolean success = studentDAO.updateStudentEthnicity(newEthnicity, ID);
+        boolean success = StudentDAO.updateStudentEthnicity(newEthnicity, ID);
         currentStudent.setEthnicity(newEthnicity);
         if (success) {
             showAlert("更新成功", "民族更新成功！");
@@ -706,7 +1056,7 @@ public class TeacherController extends Controller {
             return;
         }
         String ID = currentStudent.getID();
-        boolean success = studentDAO.updateStudentPoliticalAffiliation(newPoliticalAffiliation, ID);
+        boolean success = StudentDAO.updateStudentPoliticalAffiliation(newPoliticalAffiliation, ID);
         currentStudent.setPoliticalAffiliation(newPoliticalAffiliation);
         if (success) {
             showAlert("更新成功", "政治面貌更新成功！");
@@ -727,7 +1077,7 @@ public class TeacherController extends Controller {
         if (newStudentID == null || newStudentID.equals(oldStudentID)) {
             return;
         }
-        boolean success = studentDAO.updateStudentID(newStudentID, oldStudentID);
+        boolean success = StudentDAO.updateStudentID(newStudentID, oldStudentID);
         currentStudent.setStudentID(newStudentID);
         if (success) {
             // refresh
@@ -742,28 +1092,6 @@ public class TeacherController extends Controller {
         }
     }
 
-//    public void updateStudentEnrolmentDate() {
-//        if (currentStudent == null) {
-//            return;
-//        }
-//        Date oldEnrolmentDate = currentStudent.getEnrolmentDate();
-//        LocalDate newEnrolmentDate = enrolmentDatePicker.getValue();
-//        if (newEnrolmentDate == null || newEnrolmentDate.equals(oldEnrolmentDate.toLocalDate())) {
-//            return;
-//        }
-//        String studentID = currentStudent.getStudentID();
-//        boolean success = studentDAO.updateStudentEnrolmentDate(Date.valueOf(newEnrolmentDate), studentID);
-//        currentStudent.setEnrolmentDate(Date.valueOf(newEnrolmentDate));
-//        if (success) {
-//            showAlert("更新成功", "入学日期更新成功！");
-//        } else {
-//            // rollback
-//            currentStudent.setEnrolmentDate(oldEnrolmentDate);
-//            enrolmentDatePicker.setValue(oldEnrolmentDate.toLocalDate());
-//            showAlert("更新失败", "入学日期更新失败！");
-//        }
-//    }
-
     public void updateStudentMajor() {
         if (currentStudent == null) {
             return;
@@ -774,7 +1102,7 @@ public class TeacherController extends Controller {
             return;
         }
         String studentID = currentStudent.getStudentID();
-        boolean success = studentDAO.updateStudentMajor(newMajor, studentID);
+        boolean success = StudentDAO.updateStudentMajor(newMajor, studentID);
         currentStudent.setMajor(newMajor);
         if (success) {
             showAlert("更新成功", "专业更新成功！");
