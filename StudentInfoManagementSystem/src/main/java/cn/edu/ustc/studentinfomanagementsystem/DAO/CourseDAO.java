@@ -2,6 +2,7 @@ package cn.edu.ustc.studentinfomanagementsystem.DAO;
 
 import cn.edu.ustc.studentinfomanagementsystem.models.Course;
 import cn.edu.ustc.studentinfomanagementsystem.utils.DBConnection;
+import org.jetbrains.annotations.Nullable;
 
 import java.sql.*;
 import java.util.ArrayList;
@@ -101,7 +102,7 @@ public class CourseDAO extends DAO {
         }
     }
 
-    public static String getPassedCredits(String studentID) {
+    public static @Nullable String getPassedCredits(String studentID) {
         // SELECT GetPassedCredits('PB21111738') as PassedCredits;
         try (Connection conn = DBConnection.getConnection(true)) {
             return callDecimalFunction("GetPassedCredits", studentID, "PassedCredits", conn);
@@ -111,7 +112,7 @@ public class CourseDAO extends DAO {
         }
     }
 
-    public static Integer getFailedCourseNum(String studentID) {
+    public static @Nullable Integer getFailedCourseNum(String studentID) {
         // SELECT GetFailedCourseNum('PB21111738') as FailedCourseNum;
         try (Connection conn = DBConnection.getConnection(true)) {
             return callIntFunction("GetFailedCourseNum", studentID, "FailedCourseNum", conn);
@@ -121,7 +122,7 @@ public class CourseDAO extends DAO {
         }
     }
 
-    public static String getFailedCredits(String studentID) {
+    public static @Nullable String getFailedCredits(String studentID) {
         // SELECT GetFailedCredits('PB21111738') as FailedCredits;
         try (Connection conn = DBConnection.getConnection(true)) {
             return callDecimalFunction("GetFailedCredits", studentID, "FailedCredits", conn);
@@ -131,7 +132,7 @@ public class CourseDAO extends DAO {
         }
     }
 
-    public static Float getWeightedAverageScore(String studentID) {
+    public static @Nullable Float getWeightedAverageScore(String studentID) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         try (Connection conn = DBConnection.getConnection(true)) {
             return callFloatFunction("GetWeightedAverageScore", studentID, "WeightedAverageScore", conn);
