@@ -390,7 +390,7 @@ public class TeacherController extends Controller {
 
     private boolean studentGradesLoaded = false;
 
-    private boolean studentGradeStatasticsLoaded = false;
+    private boolean studentGradeStatisticsLoaded = false;
 
     @FXML
     private void initialize() {
@@ -593,7 +593,7 @@ public class TeacherController extends Controller {
     @FXML
     private void handleQueryStudentButtonAction() {
         String studentID = studentIDComboBox.getValue();
-        if (studentID == null) {
+        if (StudentDAO.isStringEmpty(studentID)) {
             showAlert("查询失败", "请先选择待查询学生学号！");
             return;
         }
@@ -609,7 +609,7 @@ public class TeacherController extends Controller {
         punishmentsLoaded = false;
         coursesLoaded = false;
         studentCoursesLoaded = false;
-        studentGradeStatasticsLoaded = false;
+        studentGradeStatisticsLoaded = false;
         studentGradesLoaded = false;
     }
 
@@ -623,6 +623,13 @@ public class TeacherController extends Controller {
         clearAwardPunishmentAddInfo();
         clearAwardPunishmentUpdateInfo();
         clearAwardPunishmentDeleteInfo();
+        clearCourseAddInfo();
+        clearCourseUpdateInfo();
+        clearCourseDeleteInfo();
+        clearStudentCourseAddInfo();
+        clearStudentGradeUpdateInfo();
+        clearStudentGradeDeleteInfo();
+
         // reload the tables and statistics
         loadAwards();
         loadPunishments();
@@ -661,17 +668,24 @@ public class TeacherController extends Controller {
         LocalDate enrolmentDate = newEnrolmentDatePicker.getValue();
         String major = newMajorComboBox.getValue();
         // if any of the fields is empty, return
-        if (name == null || ID == null || gender == null || DOB == null ||
-                ethnicity == null || politicalAffiliation == null || studentID == null ||
-                enrolmentDate == null || major == null) {
+        if (StudentDAO.isAnyStringEmpty(name, ID, gender, ethnicity, politicalAffiliation, studentID, major) || DOB == null) {
             showAlert("添加失败", "请填写所有信息！");
             return;
         }
         // create a new student
-        Student student = new Student(
-                ID, name, gender, Date.valueOf(DOB), ethnicity,
-                politicalAffiliation, studentID, Date.valueOf(enrolmentDate), major
-        );
+        Student student;
+        if (enrolmentDate == null) {
+            student = new Student(
+                    ID, name, gender, Date.valueOf(DOB), ethnicity,
+                    politicalAffiliation, studentID, null, major
+            );
+        } else {
+            student = new Student(
+                    ID, name, gender, Date.valueOf(DOB), ethnicity,
+                    politicalAffiliation, studentID, Date.valueOf(enrolmentDate), major
+            );
+        }
+
         // insert the student into the database
         boolean success = StudentDAO.insertStudent(student);
         if (success) {
@@ -687,7 +701,7 @@ public class TeacherController extends Controller {
     private void handleDeleteStudentButtonAction() {
         // get the current selected studentID
         String studentID = studentIDComboBox.getValue();
-        if (studentID == null) {
+        if (StudentDAO.isStringEmpty(studentID)) {
             showAlert("删除失败", "请选择一个学生！");
             return;
         }
@@ -716,6 +730,13 @@ public class TeacherController extends Controller {
             loadStudentIDComboBox(true);
             // empty other info
             clearStudentQueryInfo();
+            // tables need reloading
+            awardsLoaded = false;
+            punishmentsLoaded = false;
+            coursesLoaded = false;
+            studentCoursesLoaded = false;
+            studentGradeStatisticsLoaded = false;
+            studentGradesLoaded = false;
         } else {
             showAlert("删除失败", "删除失败！");
         }
@@ -743,7 +764,7 @@ public class TeacherController extends Controller {
         String awardName = newAwardNameTextField.getText();
         String awardLevel = newAwardLevelComboBox.getValue();
         LocalDate awardDate = newAwardDatePicker.getValue();
-        if (studentID == null || awardName == null || awardLevel == null) {
+        if (StudentDAO.isAnyStringEmpty(studentID, awardName, awardLevel)) {
             showAlert("添加失败", "请填写所有信息！");
             return;
         }
@@ -785,7 +806,7 @@ public class TeacherController extends Controller {
         String studentID = newPunishmentStudentIDTextField.getText();
         String punishmentName = newPunishmentNameTextField.getText();
         LocalDate punishmentDate = newPunishmentDatePicker.getValue();
-        if (studentID == null || punishmentName == null) {
+        if (StudentDAO.isAnyStringEmpty(studentID, punishmentName)) {
             showAlert("添加失败", "请填写所有信息！");
             return;
         }
@@ -829,16 +850,16 @@ public class TeacherController extends Controller {
         String newAwardName = updateAwardNewNameTextField.getText();
         String newAwardLevel = updateAwardNewLevelComboBox.getValue();
         LocalDate newAwardDate = updateAwardNewDatePicker.getValue();
-        if (studentID == null) {
+        if (StudentDAO.isStringEmpty(studentID)) {
             showAlert("更新失败", "请填写学生学号！");
             return;
         }
-        if (oldAwardName == null) {
+        if (StudentDAO.isStringEmpty(oldAwardName)) {
             showAlert("更新失败", "请填写原奖项名称！");
             return;
         }
         // at least one field should be updated
-        if (newAwardName == null && newAwardLevel == null && newAwardDate == null) {
+        if (StudentDAO.areAllStringsEmpty(newAwardName, newAwardLevel) && newAwardDate == null) {
             showAlert("更新失败", "请填写至少一个新的奖项信息！");
             return;
         }
@@ -881,16 +902,16 @@ public class TeacherController extends Controller {
         String oldPunishmentName = updatePunishmentOldNameTextField.getText();
         String newPunishmentName = updatePunishmentNewNameTextField.getText();
         LocalDate newPunishmentDate = updatePunishmentNewDatePicker.getValue();
-        if (studentID == null) {
+        if (StudentDAO.isStringEmpty(studentID)) {
             showAlert("更新失败", "请填写学生学号！");
             return;
         }
-        if (oldPunishmentName == null) {
+        if (StudentDAO.isStringEmpty(oldPunishmentName)) {
             showAlert("更新失败", "请填写原惩罚名称！");
             return;
         }
         // at least one field should be updated
-        if (newPunishmentName == null && newPunishmentDate == null) {
+        if (StudentDAO.isStringEmpty(newPunishmentName) && newPunishmentDate == null) {
             showAlert("更新失败", "请填写至少一个新的惩罚信息！");
             return;
         }
@@ -910,6 +931,7 @@ public class TeacherController extends Controller {
         }
     }
 
+    @FXML
     public void handleDeleteAwardButtonAction() {
         // show confirmation first
         Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认删除该奖项？");
@@ -930,7 +952,7 @@ public class TeacherController extends Controller {
         // if any of the required fields is empty, return
         String studentID = deleteAwardStudentIDTextField.getText();
         String awardName = deleteAwardNameTextField.getText();
-        if (studentID == null || awardName == null) {
+        if (StudentDAO.isAnyStringEmpty(studentID, awardName)) {
             showAlert("删除失败", "请填写所有信息！");
             return;
         }
@@ -945,6 +967,7 @@ public class TeacherController extends Controller {
         }
     }
 
+    @FXML
     public void handleDeletePunishmentButtonAction() {
         // show confirmation first
         Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认删除该惩罚？");
@@ -965,7 +988,7 @@ public class TeacherController extends Controller {
         // if any of the required fields is empty, return
         String studentID = deletePunishmentStudentIDTextField.getText();
         String punishmentName = deletePunishmentNameTextField.getText();
-        if (studentID == null || punishmentName == null) {
+        if (StudentDAO.isAnyStringEmpty(studentID, punishmentName)) {
             showAlert("删除失败", "请填写所有信息！");
             return;
         }
@@ -975,6 +998,244 @@ public class TeacherController extends Controller {
             showAlert("删除成功", "删除成功！");
             // the punishment table view needs reloading
             punishmentsLoaded = false;
+        } else {
+            showAlert("删除失败", "删除失败！");
+        }
+    }
+
+    @FXML
+    public void handleAddNewCourseButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认添加该课程？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String courseID = newCourseIDTextField.getText();
+        String courseName = newCourseNameTextField.getText();
+        String credits = newCourseCreditsTextField.getText();
+        if (StudentDAO.isAnyStringEmpty(courseID, courseName, credits)) {
+            showAlert("添加失败", "请填写所有信息！");
+            return;
+        }
+        // create a new course
+        Course course = new Course(courseName, courseID, credits);
+        // insert the course into the database
+        boolean success = CourseDAO.insertCourse(course);
+        if (success) {
+            showAlert("添加成功", "添加成功！");
+            // the course table view needs reloading
+            coursesLoaded = false;
+        } else {
+            showAlert("添加失败", "添加失败！");
+        }
+    }
+
+    @FXML
+    public void handleUpdateCourseButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认更新该课程？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String oldCourseID = updateOldCourseIDTextField.getText();
+        String newCourseID = updateNewCourseIDTextField.getText();
+        String newCourseName = updateNewCourseNameTextField.getText();
+        String newCredits = updateNewCourseCreditsTextField.getText();
+        if (StudentDAO.isStringEmpty(oldCourseID)) {
+            showAlert("更新失败", "请填写原课程号！");
+            return;
+        }
+        // at least one field should be updated
+        if (StudentDAO.areAllStringsEmpty(newCourseID, newCourseName, newCredits)) {
+            showAlert("更新失败", "请填写至少一个新的课程信息！");
+            return;
+        }
+        // update the course
+        boolean success = CourseDAO.updateCourse(oldCourseID, newCourseID, newCourseName, newCredits);
+        if (success) {
+            showAlert("更新成功", "更新成功！");
+            // the course table view needs reloading
+            coursesLoaded = false;
+            studentCoursesLoaded = false;
+            studentGradesLoaded = false;
+        } else {
+            showAlert("更新失败", "更新失败！");
+        }
+    }
+
+    @FXML
+    public void handleDeleteCourseButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认删除该课程？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if the courseID is empty, return
+        String courseID = deleteCourseIDTextField.getText();
+        if (StudentDAO.isStringEmpty(courseID)) {
+            showAlert("删除失败", "请填写课程号！");
+            return;
+        }
+        // delete the course
+        boolean success = CourseDAO.deleteCourse(courseID);
+        if (success) {
+            showAlert("删除成功", "删除成功！");
+            // the course table view needs reloading
+            coursesLoaded = false;
+            studentCoursesLoaded = false;
+            studentGradesLoaded = false;
+        } else {
+            showAlert("删除失败", "删除失败！");
+        }
+    }
+
+    @FXML
+    public void handleAddStudentCourseButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认添加该选课？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = addCourseStudentIDTextField.getText();
+        String courseID = addCourseCourseIDTextField.getText();
+        if (StudentDAO.isAnyStringEmpty(studentID, courseID)) {
+            showAlert("添加失败", "请填写所有信息！");
+            return;
+        }
+        // add the course for the student
+        boolean success = GradeDAO.addCourseForStudent(studentID, courseID);
+        if (success) {
+            showAlert("添加成功", "添加成功！");
+            // the student course table view needs reloading
+            studentCoursesLoaded = false;
+        } else {
+            showAlert("添加失败", "添加失败！");
+        }
+    }
+
+    @FXML
+    public void handleUpdateStudentGradeButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认更新该成绩？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = updateCourseGradeStudentIDTextField.getText();
+        String courseID = updateCourseGradeCourseIDTextField.getText();
+        String newGrade = updateCourseGradeNewGradeTextField.getText();
+        if (StudentDAO.isAnyStringEmpty(studentID, courseID, newGrade)) {
+            showAlert("更新失败", "请填写所有信息！");
+            return;
+        }
+        // update the grade
+        try {
+            boolean success = GradeDAO.updateGrade(studentID, courseID, Integer.parseInt(newGrade));
+            if (success) {
+                showAlert("更新成功", "更新成功！");
+                // the student grade table view needs reloading
+                studentGradesLoaded = false;
+                studentCoursesLoaded = false;
+                studentGradeStatisticsLoaded = false;
+            } else {
+                showAlert("更新失败", "更新失败！");
+            }
+        } catch (NumberFormatException e) {
+            showAlert("更新失败", "成绩应为整数！");
+        }
+    }
+
+    @FXML
+    public void handleDeleteStudentGradeButtonAction() {
+        // show confirmation first
+        Optional<ButtonType> confirmation = showConfirmation("确认", "是否确认删除该选课？");
+        if (confirmation.isPresent()) {
+            switch (confirmation.get().getText()) {
+                case "是" -> {
+                    // proceed
+                }
+                case "否" -> {
+                    return;
+                }
+                default -> {
+                    // the user closed the dialog
+                    return;
+                }
+            }
+        }
+        // if any of the required fields is empty, return
+        String studentID = deleteCourseStudentIDTextField.getText();
+        String courseID = deleteCourseCourseIDTextField.getText();
+        if (StudentDAO.isAnyStringEmpty(studentID, courseID)) {
+            showAlert("删除失败", "请填写所有信息！");
+            return;
+        }
+        // delete the course for the student
+        boolean success = GradeDAO.deleteGrade(studentID, courseID);
+        if (success) {
+            showAlert("删除成功", "删除成功！");
+            // the student course table view needs reloading
+            studentCoursesLoaded = false;
+            studentGradesLoaded = false;
+            studentGradeStatisticsLoaded = false;
         } else {
             showAlert("删除失败", "删除失败！");
         }
@@ -1217,7 +1478,7 @@ public class TeacherController extends Controller {
     }
 
     public void loadStudentGradeStatistics() {
-        if (studentGradeStatasticsLoaded) {
+        if (studentGradeStatisticsLoaded) {
             return;
         }
 //        studentGradeStatasticsLoaded = loadPassedCredits() && loadFailedCourseNumber() && loadFailedCredits() && loadWeightedAverageScore();
@@ -1225,12 +1486,12 @@ public class TeacherController extends Controller {
         boolean failedCourseNumberLoaded = loadFailedCourseNumber();
         boolean failedCreditsLoaded = loadFailedCredits();
         boolean weightedAverageScoreLoaded = loadWeightedAverageScore();
-        studentGradeStatasticsLoaded = passedCreditsLoaded && failedCourseNumberLoaded && failedCreditsLoaded && weightedAverageScoreLoaded;
+        studentGradeStatisticsLoaded = passedCreditsLoaded && failedCourseNumberLoaded && failedCreditsLoaded && weightedAverageScoreLoaded;
     }
 
     public void loadStudentGradeStatistics(boolean force) {
         if (force) {
-            studentGradeStatasticsLoaded = false;
+            studentGradeStatisticsLoaded = false;
         }
         loadStudentGradeStatistics();
     }
@@ -1296,6 +1557,39 @@ public class TeacherController extends Controller {
         clear(deletePunishmentNameTextField);
     }
 
+    public void clearCourseAddInfo() {
+        clear(newCourseIDTextField);
+        clear(newCourseNameTextField);
+        clear(newCourseCreditsTextField);
+    }
+
+    public void clearCourseUpdateInfo() {
+        clear(updateOldCourseIDTextField);
+        clear(updateNewCourseIDTextField);
+        clear(updateNewCourseNameTextField);
+        clear(updateNewCourseCreditsTextField);
+    }
+
+    public void clearCourseDeleteInfo() {
+        clear(deleteCourseIDTextField);
+    }
+
+    public void clearStudentCourseAddInfo() {
+        clear(addCourseStudentIDTextField);
+        clear(addCourseCourseIDTextField);
+    }
+
+    public void clearStudentGradeUpdateInfo() {
+        clear(updateCourseGradeStudentIDTextField);
+        clear(updateCourseGradeCourseIDTextField);
+        clear(updateCourseGradeNewGradeTextField);
+    }
+
+    public void clearStudentGradeDeleteInfo() {
+        clear(deleteCourseStudentIDTextField);
+        clear(deleteCourseCourseIDTextField);
+    }
+
     public void resetFlags() {
         welcomeLabelLoaded = false;
         studentQueryComboBoxesLoaded = false;
@@ -1307,7 +1601,7 @@ public class TeacherController extends Controller {
         coursesLoaded = false;
         studentCoursesLoaded = false;
         studentGradesLoaded = false;
-        studentGradeStatasticsLoaded = false;
+        studentGradeStatisticsLoaded = false;
     }
 
     public void updateStudentName() {
@@ -1316,7 +1610,7 @@ public class TeacherController extends Controller {
         }
         String oldName = currentStudent.getName();
         String newName = nameTextField.getText();
-        if (newName == null || newName.equals(oldName)) {
+        if (StudentDAO.isStringEmpty(newName) || newName.equals(oldName)) {
             return;
         }
         String ID = currentStudent.getID();
@@ -1338,7 +1632,7 @@ public class TeacherController extends Controller {
         }
         String oldGender = currentStudent.getGender();
         String newGender = genderComboBox.getValue();
-        if (newGender == null || newGender.equals(oldGender)) {
+        if (StudentDAO.isStringEmpty(newGender) || newGender.equals(oldGender)) {
             return;
         }
         String ID = currentStudent.getID();
@@ -1360,7 +1654,7 @@ public class TeacherController extends Controller {
         }
         String oldEthnicity = currentStudent.getEthnicity();
         String newEthnicity = ethnicityComboBox.getValue();
-        if (newEthnicity == null || newEthnicity.equals(oldEthnicity)) {
+        if (StudentDAO.isStringEmpty(newEthnicity) || newEthnicity.equals(oldEthnicity)) {
             return;
         }
         String ID = currentStudent.getID();
@@ -1382,7 +1676,7 @@ public class TeacherController extends Controller {
         }
         String oldPoliticalAffiliation = currentStudent.getPoliticalAffiliation();
         String newPoliticalAffiliation = politicalAffiliationComboBox.getValue();
-        if (newPoliticalAffiliation == null || newPoliticalAffiliation.equals(oldPoliticalAffiliation)) {
+        if (StudentDAO.isStringEmpty(newPoliticalAffiliation) || newPoliticalAffiliation.equals(oldPoliticalAffiliation)) {
             return;
         }
         String ID = currentStudent.getID();
@@ -1404,7 +1698,7 @@ public class TeacherController extends Controller {
         }
         String oldStudentID = currentStudent.getStudentID();
         String newStudentID = studentIDTextField.getText();
-        if (newStudentID == null || newStudentID.equals(oldStudentID)) {
+        if (StudentDAO.isStringEmpty(newStudentID) || newStudentID.equals(oldStudentID)) {
             return;
         }
         boolean success = StudentDAO.updateStudentID(newStudentID, oldStudentID);
@@ -1428,7 +1722,7 @@ public class TeacherController extends Controller {
         }
         String oldMajor = currentStudent.getMajor();
         String newMajor = majorComboBox.getValue();
-        if (newMajor == null || newMajor.equals(oldMajor)) {
+        if (StudentDAO.isStringEmpty(newMajor) || newMajor.equals(oldMajor)) {
             return;
         }
         String studentID = currentStudent.getStudentID();

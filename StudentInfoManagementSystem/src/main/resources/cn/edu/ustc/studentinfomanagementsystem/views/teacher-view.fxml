@@ -749,7 +749,7 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                                                          <children>
-                                                            <Button mnemonicParsing="false" text="添加课程">
+                                                            <Button mnemonicParsing="false" onAction="#handleAddNewCourseButtonAction" text="添加课程">
                                                                <font>
                                                                   <Font name="Microsoft YaHei" size="12.0" />
                                                                </font>
@@ -814,7 +814,7 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                                                          <children>
-                                                            <Button mnemonicParsing="false" text="修改课程">
+                                                            <Button mnemonicParsing="false" onAction="#handleUpdateCourseButtonAction" text="修改课程">
                                                                <font>
                                                                   <Font name="Microsoft YaHei" size="12.0" />
                                                                </font>
@@ -849,7 +849,7 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                                                          <children>
-                                                            <Button mnemonicParsing="false" text="删除课程">
+                                                            <Button mnemonicParsing="false" onAction="#handleDeleteCourseButtonAction" text="删除课程">
                                                                <font>
                                                                   <Font name="Microsoft YaHei" size="12.0" />
                                                                </font>
@@ -993,7 +993,7 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                                                          <children>
-                                                            <Button mnemonicParsing="false" text="添加选课">
+                                                            <Button mnemonicParsing="false" onAction="#handleAddStudentCourseButtonAction" text="添加选课">
                                                                <font>
                                                                   <Font name="Microsoft YaHei" size="12.0" />
                                                                </font>
@@ -1048,7 +1048,7 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                                                          <children>
-                                                            <Button mnemonicParsing="false" text="添加/修改成绩">
+                                                            <Button mnemonicParsing="false" onAction="#handleUpdateStudentGradeButtonAction" text="添加/修改成绩">
                                                                <font>
                                                                   <Font name="Microsoft YaHei" size="12.0" />
                                                                </font>
@@ -1093,7 +1093,7 @@
                                                       </HBox>
                                                       <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
                                                          <children>
-                                                            <Button mnemonicParsing="false" text="选课/成绩删除">
+                                                            <Button mnemonicParsing="false" onAction="#handleDeleteStudentGradeButtonAction" text="选课/成绩删除">
                                                                <font>
                                                                   <Font name="Microsoft YaHei" size="12.0" />
                                                                </font>

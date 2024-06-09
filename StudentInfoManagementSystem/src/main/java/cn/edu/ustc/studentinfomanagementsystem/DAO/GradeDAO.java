@@ -5,11 +5,30 @@ import cn.edu.ustc.studentinfomanagementsystem.models.Grade;
 import cn.edu.ustc.studentinfomanagementsystem.utils.DBConnection;
 import org.jetbrains.annotations.Nullable;
 
+import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GradeDAO extends DAO {
+    // update an integer field with two key-value pairs
+//    private static boolean updateGradeField(String updateField, Integer updateValue, String studentID, String courseID, Connection connection) {
+//        return updateDBField("Grade", updateField, updateValue, "StudentID", studentID, "CourseID", courseID, connection);
+//    }
+
+//    private static boolean deleteFromGrade(String studentID, String courseID, Connection connection) {
+//        return deleteFromDBField("Grade", "StudentID", studentID, "CourseID", courseID, connection);
+//    }
+
+//    private static boolean deleteFromGrade(String studentID, String courseID) {
+//        try (Connection conn = DBConnection.getConnection(true)) {
+//            return deleteFromGrade(studentID, courseID, conn);
+//        } catch (SQLException e) {
+//            DBConnection.SQLExceptionHandler(e);
+//            return false;
+//        }
+//    }
+
     public static List<Grade> queryStudentCurrentCourses(String studentID) {
         String sql = "SELECT * FROM StudentGrade WHERE StudentID = ?";
         List<Grade> courses = new ArrayList<>();
@@ -102,6 +121,53 @@ public class GradeDAO extends DAO {
         } catch (SQLException e) {
             DBConnection.SQLExceptionHandler(e);
             return grades;
+        }
+    }
+
+    public static boolean insertGrade(String studentID, String courseID, Integer score) {
+        String sql = "INSERT INTO Grade(StudentID, CourseID, Score) VALUES (?, ?, ?)";
+        try (
+            Connection conn = DBConnection.getConnection(true);
+            PreparedStatement ps = conn.prepareStatement(sql)
+        ) {
+            ps.setString(1, studentID);
+            ps.setString(2, courseID);
+            if (score == null) {
+                ps.setNull(3, Types.INTEGER);
+            } else {
+                ps.setInt(3, score);
+            }
+
+            int affectedRows = ps.executeUpdate();
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    public static boolean addCourseForStudent(String studentID, String courseID) {
+        return insertGrade(studentID, courseID, null);
+    }
+
+    public static boolean updateGrade(String studentID, String courseID, Integer score) {
+        // UPDATE SCORE SET Score = ? WHERE StudentID = ? AND CourseID = ?
+        try (Connection conn = DBConnection.getConnection(true)) {
+//            return updateGradeField("Score", score, studentID, courseID, conn);
+            return updateDBField("Grade", "Score", score, "StudentID", studentID, "CourseID", courseID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+
+    public static boolean deleteGrade(String studentID, String courseID) {
+        // DELETE FROM Grade WHERE StudentID = ? AND CourseID = ?
+        try (Connection conn = DBConnection.getConnection(true)) {
+            return deleteFromDBField("Grade", "StudentID", studentID, "CourseID", courseID, conn);
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
         }
     }
 

@@ -1,6 +1,7 @@
 package cn.edu.ustc.studentinfomanagementsystem.DAO;
 
 import cn.edu.ustc.studentinfomanagementsystem.utils.DBConnection;
+import org.jetbrains.annotations.NotNull;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -8,6 +9,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class DAO {
+    // update a string field with one key-value pair
     protected static boolean updateDBField(String table, String updateField, String updateValue, String keyField, String keyValue, Connection connection) {
 //        String sql = "UPDATE ? SET ? = ? WHERE ? = ?";
         String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField + " = ?";
@@ -24,7 +26,7 @@ public class DAO {
             return false;
         }
     }
-
+    // update a string field with two key-value pairs
     protected static boolean updateDBField(String table, String updateField, String updateValue, String keyField1, String keyValue1, String keyField2, String keyValue2, Connection connection) {
         // UPDATE Award SET AwardName = ? WHERE StudentID = ? AND AwardName = ?
         String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField1 + " = ? AND " + keyField2 + " = ?";
@@ -42,7 +44,7 @@ public class DAO {
             return false;
         }
     }
-
+    // update a date field with one key-value pair
     protected static boolean updateDBField(String table, String updateField, Date updateDate, String keyField, String keyValue, Connection connection) {
 //        String sql = "UPDATE ? SET ? = ? WHERE ? = ?";
         String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField + " = ?";
@@ -59,7 +61,7 @@ public class DAO {
             return false;
         }
     }
-
+    // update a date field with two key-value pairs
     protected static boolean updateDBField(String table, String updateField, Date updateDate, String keyField1, String keyValue1, String keyField2, String keyValue2, Connection connection) {
         // UPDATE Award SET AwardDate = ? WHERE StudentID = ? AND AwardName = ?
         String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField1 + " = ? AND " + keyField2 + " = ?";
@@ -71,6 +73,24 @@ public class DAO {
             ps.setString(3, keyValue2);
             int affectedRows = ps.executeUpdate();
             // aR = 1, success; aR = 0, fail (no award with such ID & name)
+            return affectedRows == 1;
+        } catch (SQLException e) {
+            DBConnection.SQLExceptionHandler(e);
+            return false;
+        }
+    }
+    // update an integer field with two key-value pairs
+    protected static boolean updateDBField(String table, String updateField, Integer updateValue, String keyField1, String keyValue1, String keyField2, String keyValue2, Connection connection) {
+        // UPDATE Grade SET Score = ? WHERE StudentID = ? AND CourseID = ?
+        String sql = "UPDATE " + table + " SET " + updateField + " = ? WHERE " + keyField1 + " = ? AND " + keyField2 + " = ?";
+        try (
+                PreparedStatement ps = connection.prepareStatement(sql)
+        ) {
+            ps.setInt(1, updateValue);
+            ps.setString(2, keyValue1);
+            ps.setString(3, keyValue2);
+            int affectedRows = ps.executeUpdate();
+            // aR = 1, success; aR = 0, fail (no student with such ID)
             return affectedRows == 1;
         } catch (SQLException e) {
             DBConnection.SQLExceptionHandler(e);
@@ -296,5 +316,29 @@ public class DAO {
             DBConnection.SQLExceptionHandler(e);
             return false;
         }
+    }
+    // check if a string is null or empty
+    public static boolean isStringEmpty(String str) {
+        return str == null || str.isBlank();
+    }
+
+    // check if at least one of the strings is null or empty
+    public static boolean isAnyStringEmpty(String @NotNull ... strings) {
+        for (String str : strings) {
+            if (isStringEmpty(str)) {
+                return true;
+            }
+        }
+        return false;
+    }
+
+    // check if all the strings are null or empty
+    public static boolean areAllStringsEmpty(String @NotNull ... strings) {
+        for (String str : strings) {
+            if (!isStringEmpty(str)) {
+                return false;
+            }
+        }
+        return true;
     }
 }

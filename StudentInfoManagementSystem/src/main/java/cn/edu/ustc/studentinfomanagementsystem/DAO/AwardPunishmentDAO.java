@@ -174,7 +174,7 @@ public class AwardPunishmentDAO extends DAO{
     // update the award: returns true if at least one field is updated
     public static boolean updateAward(String studentID, String oldAwardName, String newAwardName, String newAwardLevel, Date newAwardDate) {
         // check the primary keys
-        if (studentID == null || oldAwardName == null) {
+        if (DAO.isAnyStringEmpty(studentID, oldAwardName)) {
             return false;
         }
         // check if the award exists
@@ -191,7 +191,7 @@ public class AwardPunishmentDAO extends DAO{
         }
         // update the award
         // check if there is a change
-        if (newAwardName == null && newAwardLevel == null && newAwardDate == null) {
+        if (DAO.areAllStringsEmpty(newAwardName, newAwardLevel) && newAwardDate == null) {
             return false;
         }
         // create a new connection and disable auto-commit
@@ -201,13 +201,7 @@ public class AwardPunishmentDAO extends DAO{
             // disable auto-commit
             conn.setAutoCommit(false);
             // update the award fields
-            if (newAwardName != null) {
-                if (!updateAwardField("AwardName", newAwardName, "StudentID", studentID, "AwardName", oldAwardName, conn)) {
-                    conn.rollback();
-                    return false;
-                }
-            }
-            if (newAwardLevel != null) {
+            if (!DAO.isStringEmpty(newAwardLevel)) {
                 if (!updateAwardField("AwardLevel", newAwardLevel, "StudentID", studentID, "AwardName", oldAwardName, conn)) {
                     conn.rollback();
                     return false;
@@ -215,6 +209,12 @@ public class AwardPunishmentDAO extends DAO{
             }
             if (newAwardDate != null) {
                 if (!updateAwardField("AwardDate", newAwardDate, "StudentID", studentID,"AwardName", oldAwardName, conn)) {
+                    conn.rollback();
+                    return false;
+                }
+            }
+            if (!DAO.isStringEmpty(newAwardName)) {
+                if (!updateAwardField("AwardName", newAwardName, "StudentID", studentID, "AwardName", oldAwardName, conn)) {
                     conn.rollback();
                     return false;
                 }
@@ -232,7 +232,7 @@ public class AwardPunishmentDAO extends DAO{
     // update the punishment: returns true if at least one field is updated
     public static boolean updatePunishment(String studentID, String oldPunishmentName, String newPunishmentName, Date newPunishmentDate) {
         // check the primary keys
-        if (studentID == null || oldPunishmentName == null) {
+        if (DAO.isAnyStringEmpty(studentID, oldPunishmentName)) {
             return false;
         }
         // check if the punishment exists
@@ -249,7 +249,7 @@ public class AwardPunishmentDAO extends DAO{
         }
         // update the punishment
         // check if there is a change
-        if (newPunishmentName == null && newPunishmentDate == null) {
+        if (DAO.isStringEmpty(newPunishmentName) && newPunishmentDate == null) {
             return false;
         }
         // create a new connection and disable auto-commit
@@ -259,14 +259,14 @@ public class AwardPunishmentDAO extends DAO{
             // disable auto-commit
             conn.setAutoCommit(false);
             // update the punishment fields
-            if (newPunishmentName != null) {
-                if (!updatePunishmentField("PunishmentName", newPunishmentName, "StudentID", studentID, "PunishmentName", oldPunishmentName, conn)) {
+            if (newPunishmentDate != null) {
+                if (!updatePunishmentField("PunishmentDate", newPunishmentDate, "StudentID", studentID, "PunishmentName", oldPunishmentName, conn)) {
                     conn.rollback();
                     return false;
                 }
             }
-            if (newPunishmentDate != null) {
-                if (!updatePunishmentField("PunishmentDate", newPunishmentDate, "StudentID", studentID, "PunishmentName", oldPunishmentName, conn)) {
+            if (!DAO.isStringEmpty(newPunishmentName)) {
+                if (!updatePunishmentField("PunishmentName", newPunishmentName, "StudentID", studentID, "PunishmentName", oldPunishmentName, conn)) {
                     conn.rollback();
                     return false;
                 }
@@ -283,7 +283,7 @@ public class AwardPunishmentDAO extends DAO{
     // delete the award: returns true if the award is deleted
     public static boolean deleteAward(String studentID, String awardName) {
         // check the primary keys
-        if (studentID == null || awardName == null) {
+        if (DAO.isAnyStringEmpty(studentID, awardName)) {
             return false;
         }
         return deleteFromAward(studentID, awardName);
@@ -292,7 +292,7 @@ public class AwardPunishmentDAO extends DAO{
     // delete the punishment: returns true if the punishment is deleted
     public static boolean deletePunishment(String studentID, String punishmentName) {
         // check the primary keys
-        if (studentID == null || punishmentName == null) {
+        if (DAO.isAnyStringEmpty(studentID, punishmentName)) {
             return false;
         }
         return deleteFromPunishment(studentID, punishmentName);

@@ -24,7 +24,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentPhoneNumber(String phoneNumber, String ID) {
         // for this student, update the phone number in the database
-        if (ID == null || phoneNumber == null) {
+        if (DAO.isAnyStringEmpty(ID, phoneNumber)) {
             return false;
         }
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -37,7 +37,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentEmail(String email, String ID) {
         // for this student, update the email in the database
-        if (ID == null || email == null) {
+        if (DAO.isAnyStringEmpty(ID, email)) {
             return false;
         }
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -50,7 +50,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentPhotoURL(String photoURL, String ID) {
         // for this student, update the email in the database
-        if (ID == null || photoURL == null) {
+        if (DAO.isAnyStringEmpty(ID, photoURL)) {
             return false;
         }
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -63,7 +63,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentName(String name, String ID) {
         // for this student, update the name in the database
-        if (ID == null || name == null) {
+        if (DAO.isAnyStringEmpty(ID, name)) {
             return false;
         }
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -76,7 +76,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentGender(String gender, String ID) {
         // for this student, update the gender in the database
-        if (ID == null || gender == null) {
+        if (DAO.isAnyStringEmpty(ID, gender)) {
             return false;
         }
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -89,7 +89,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentEthnicity(String ethnicity, String ID) {
         // for this student, update the ethnicity in the database
-        if (ID == null || ethnicity == null) {
+        if (DAO.isAnyStringEmpty(ID, ethnicity)) {
             return false;
         }
         try (Connection connection = DBConnection.getConnection(true)) {
@@ -102,7 +102,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentPoliticalAffiliation(String politicalAffiliation, String ID) {
         // for this student, update the political affiliation in the database
-        if (ID == null || politicalAffiliation == null) {
+        if (DAO.isAnyStringEmpty(ID, politicalAffiliation)) {
             return false;
         }
         try (Connection conn = DBConnection.getConnection(true)) {
@@ -115,7 +115,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentID(String newStudentID, String oldStudentID) {
         // for this student, update the student ID in the database
-        if (oldStudentID == null || newStudentID == null) {
+        if (DAO.isAnyStringEmpty(newStudentID, oldStudentID)) {
             return false;
         }
         // CALL UpdateStudentID('PB21111738', 'PB22111738');
@@ -129,7 +129,7 @@ public class StudentDAO extends DAO {
 
     public static boolean updateStudentMajor(String newMajor, String studentID) {
         // for this student, update the major in the database
-        if (studentID == null || newMajor == null) {
+        if (DAO.isAnyStringEmpty(newMajor, studentID)) {
             return false;
         }
         try (Connection connection = DBConnection.getConnection(true)) {
@@ -213,46 +213,89 @@ public class StudentDAO extends DAO {
         // insert into Student first
         // INSERT INTO Student(ID, Name, Gender, DOB, Ethnicity, PoliticalAffiliation)
         // VALUES ('123456200211212333', 'Ezra Bridger', '男', '2002-11-21', '汉', '共青团员');
-        String sql = "INSERT INTO Student(ID, Name, Gender, DOB, Ethnicity, PoliticalAffiliation) VALUES (?, ?, ?, ?, ?, ?)";
-        boolean success = false;
-        try (Connection conn = DBConnection.getConnection(true)) {
-            // both insertions should be successful at the same time
-            conn.setAutoCommit(false);
-            try (
-                PreparedStatement ps = conn.prepareStatement(sql)
-            ) {
-                ps.setString(1, student.getID());
-                ps.setString(2, student.getName());
-                ps.setString(3, student.getGender());
-                ps.setDate(4, student.getDOB());
-                ps.setString(5, student.getEthnicity());
-                ps.setString(6, student.getPoliticalAffiliation());
-                success = ps.executeUpdate() == 1;
-            }
-            if (!success) {
+        if (student.getEnrolmentDate() != null) {
+            String sql = "INSERT INTO Student(ID, Name, Gender, DOB, Ethnicity, PoliticalAffiliation) VALUES (?, ?, ?, ?, ?, ?)";
+            boolean success = false;
+            try (Connection conn = DBConnection.getConnection(true)) {
+                // both insertions should be successful at the same time
+                conn.setAutoCommit(false);
+                try (
+                    PreparedStatement ps = conn.prepareStatement(sql)
+                ) {
+                    ps.setString(1, student.getID());
+                    ps.setString(2, student.getName());
+                    ps.setString(3, student.getGender());
+                    ps.setDate(4, student.getDOB());
+                    ps.setString(5, student.getEthnicity());
+                    ps.setString(6, student.getPoliticalAffiliation());
+                    success = ps.executeUpdate() == 1;
+                }
+                if (!success) {
+                    return false;
+                }
+                // insert into Enrolment
+                // INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES ('PB21111738', '123456200211212333', '2021-09-01', '计算机科学与技术');
+                sql = "INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES (?, ?, ?, ?)";
+                try (
+                    PreparedStatement ps = conn.prepareStatement(sql)
+                ) {
+                    ps.setString(1, student.getStudentID());
+                    ps.setString(2, student.getID());
+                    ps.setDate(3, student.getEnrolmentDate());
+                    ps.setString(4, student.getMajor());
+                    success = ps.executeUpdate() == 1;
+                }
+                if (success) {
+                    conn.commit();
+                } else {
+                    conn.rollback();
+                }
+                return success;
+            } catch (SQLException e) {
+                DBConnection.SQLExceptionHandler(e);
                 return false;
             }
-            // insert into Enrolment
-            // INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES ('PB21111738', '123456200211212333', '2021-09-01', '计算机科学与技术');
-            sql = "INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES (?, ?, ?, ?)";
-            try (
-                PreparedStatement ps = conn.prepareStatement(sql)
-            ) {
-                ps.setString(1, student.getStudentID());
-                ps.setString(2, student.getID());
-                ps.setDate(3, student.getEnrolmentDate());
-                ps.setString(4, student.getMajor());
-                success = ps.executeUpdate() == 1;
+        } else {
+            String sql = "INSERT INTO Student(ID, Name, Gender, DOB, Ethnicity, PoliticalAffiliation) VALUES (?, ?, ?, ?, ?, ?)";
+            boolean success = false;
+            try (Connection conn = DBConnection.getConnection(true)) {
+                // both insertions should be successful at the same time
+                conn.setAutoCommit(false);
+                try (
+                    PreparedStatement ps = conn.prepareStatement(sql)
+                ) {
+                    ps.setString(1, student.getID());
+                    ps.setString(2, student.getName());
+                    ps.setString(3, student.getGender());
+                    ps.setDate(4, student.getDOB());
+                    ps.setString(5, student.getEthnicity());
+                    ps.setString(6, student.getPoliticalAffiliation());
+                    success = ps.executeUpdate() == 1;
+                }
+                if (!success) {
+                    return false;
+                }
+                // insert into Enrolment
+                // INSERT INTO Enrolment(StudentID, ID, EnrolmentDate, Major) VALUES ('PB21111738', '123456200211212333', '2021-09-01', '计算机科学与技术');
+                sql = "INSERT INTO Enrolment(StudentID, ID, Major) VALUES (?, ?, ?)";
+                try (
+                    PreparedStatement ps = conn.prepareStatement(sql)
+                ) {
+                    ps.setString(1, student.getStudentID());
+                    ps.setString(2, student.getID());
+                    ps.setString(3, student.getMajor());
+                    success = ps.executeUpdate() == 1;
+                }
+                if (success) {
+                    conn.commit();
+                } else {
+                    conn.rollback();
+                }
+                return success;
+            } catch (SQLException e) {
+                DBConnection.SQLExceptionHandler(e);
+                return false;
             }
-            if (success) {
-                conn.commit();
-            } else {
-                conn.rollback();
-            }
-            return success;
-        } catch (SQLException e) {
-            DBConnection.SQLExceptionHandler(e);
-            return false;
         }
     }
 
