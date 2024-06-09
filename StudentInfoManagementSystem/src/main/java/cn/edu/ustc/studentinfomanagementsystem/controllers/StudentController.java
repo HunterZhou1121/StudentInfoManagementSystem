@@ -1,7 +1,7 @@
 package cn.edu.ustc.studentinfomanagementsystem.controllers;
 
 import cn.edu.ustc.studentinfomanagementsystem.DAO.AwardPunishmentDAO;
-import cn.edu.ustc.studentinfomanagementsystem.DAO.CourseDAO;
+import cn.edu.ustc.studentinfomanagementsystem.DAO.GradeDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.StudentDAO;
 import cn.edu.ustc.studentinfomanagementsystem.models.*;
 import cn.edu.ustc.studentinfomanagementsystem.utils.ImageUploader;
@@ -74,17 +74,17 @@ public class StudentController extends Controller {
 
     @FXML private TableColumn<Course, String> selectedCourseCreditsColumn;
 
-    @FXML private TableView<Course> gradeTableView;
+    @FXML private TableView<Grade> gradeTableView;
 
-    @FXML private TableColumn<Course, String> gradeCourseNameColumn;
+    @FXML private TableColumn<Grade, String> gradeCourseNameColumn;
 
-    @FXML private TableColumn<Course, String> gradeCourseIDColumn;
+    @FXML private TableColumn<Grade, String> gradeCourseIDColumn;
 
-    @FXML private TableColumn<Course, String> gradeCreditsColumn;
+    @FXML private TableColumn<Grade, String> gradeCreditsColumn;
 
-    @FXML private TableColumn<Course, Integer> gradeColumn;
+    @FXML private TableColumn<Grade, Integer> gradeColumn;
 
-    @FXML private TableColumn<Course, String> gradeStatusColumn;
+    @FXML private TableColumn<Grade, String> gradeStatusColumn;
 
     @FXML private TextField passedCreditsTextField;
 
@@ -346,7 +346,7 @@ public class StudentController extends Controller {
         if (student == null || selectedCoursesLoaded) {
             return;
         }
-        selectedCourseTableView.setItems(FXCollections.observableArrayList(CourseDAO.querySelectedCourses(student.getStudentID())));
+        selectedCourseTableView.setItems(FXCollections.observableArrayList(GradeDAO.queryStudentCurrentCourses(student.getStudentID())));
         selectedCoursesLoaded = true;
     }
 
@@ -361,7 +361,7 @@ public class StudentController extends Controller {
         if (student == null || gradesLoaded) {
             return;
         }
-        gradeTableView.setItems(FXCollections.observableArrayList(CourseDAO.queryGrades(student.getStudentID())));
+        gradeTableView.setItems(FXCollections.observableArrayList(GradeDAO.queryStudentGrades(student.getStudentID())));
         gradesLoaded = true;
     }
 
@@ -376,14 +376,14 @@ public class StudentController extends Controller {
         if (student == null) {
             return;
         }
-        setText(passedCreditsTextField, CourseDAO.getPassedCredits(student.getStudentID()));
+        setText(passedCreditsTextField, GradeDAO.getPassedCredits(student.getStudentID()));
     }
 
     public void loadFailedCourseNumber() {
         if (student == null) {
             return;
         }
-        Integer failedCourseNum = CourseDAO.getFailedCourseNum(student.getStudentID());
+        Integer failedCourseNum = GradeDAO.getFailedCourseNum(student.getStudentID());
         if (failedCourseNum == null) {
             clearText(failedCourseNumberTextField);
             return;
@@ -395,7 +395,7 @@ public class StudentController extends Controller {
         if (student == null) {
             return;
         }
-        setText(failedCreditsTextField, CourseDAO.getFailedCredits(student.getStudentID()));
+        setText(failedCreditsTextField, GradeDAO.getFailedCredits(student.getStudentID()));
     }
 
     public void loadWeightedAverageScore() {
@@ -403,7 +403,7 @@ public class StudentController extends Controller {
             return;
         }
         // weighted average score can be null when there are no scores
-        Float weightedAverageScore = CourseDAO.getWeightedAverageScore(student.getStudentID());
+        Float weightedAverageScore = GradeDAO.getWeightedAverageScore(student.getStudentID());
         if (weightedAverageScore == null) {
             clearText(weightedAverageScoreTextField);
             return;

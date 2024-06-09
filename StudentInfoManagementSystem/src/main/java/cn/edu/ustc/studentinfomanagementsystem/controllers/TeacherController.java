@@ -1,12 +1,9 @@
 package cn.edu.ustc.studentinfomanagementsystem.controllers;
 
 import cn.edu.ustc.studentinfomanagementsystem.DAO.AwardPunishmentDAO;
-import cn.edu.ustc.studentinfomanagementsystem.DAO.CourseDAO;
 import cn.edu.ustc.studentinfomanagementsystem.DAO.StudentDAO;
 import cn.edu.ustc.studentinfomanagementsystem.SceneManager;
-import cn.edu.ustc.studentinfomanagementsystem.models.Award;
-import cn.edu.ustc.studentinfomanagementsystem.models.Punishment;
-import cn.edu.ustc.studentinfomanagementsystem.models.Student;
+import cn.edu.ustc.studentinfomanagementsystem.models.*;
 import javafx.collections.FXCollections;
 import javafx.fxml.FXML;
 import javafx.scene.control.*;
@@ -282,6 +279,94 @@ public class TeacherController extends Controller {
 
     @FXML private TextField deletePunishmentNameTextField;
 
+    // course
+    // the second level tab pane
+    @FXML private TabPane teacherCourseTabPane;
+
+    // query
+    @FXML private TableView<Course> courseTableView;
+
+    @FXML private TableColumn<Course, String> courseNameTableColumn;
+
+    @FXML private TableColumn<Course, String> courseIDTableColumn;
+
+    @FXML private TableColumn<Course, String> courseCreditsTableColumn;
+
+    // add
+    @FXML private TextField newCourseIDTextField;
+
+    @FXML private TextField newCourseNameTextField;
+
+    @FXML private TextField newCourseCreditsTextField;
+
+    // update
+    @FXML private TextField updateOldCourseIDTextField;
+
+    @FXML private TextField updateNewCourseIDTextField;
+
+    @FXML private TextField updateNewCourseNameTextField;
+
+    @FXML private TextField updateNewCourseCreditsTextField;
+
+    // delete
+    @FXML private TextField deleteCourseIDTextField;
+
+    // grade
+    // the second level tab pane
+    @FXML private TabPane teacherGradeTabPane;
+    // student courses
+    @FXML private TableView<Grade> studentCourseTableView;
+
+    @FXML private TableColumn<Grade, String> studentCourseStudentIDTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentCourseCourseNameTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentCourseCourseIDTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentCourseCreditsTableColumn;
+
+    // student grades
+    @FXML private TableView<Grade> studentGradeTableView;
+
+    @FXML private TableColumn<Grade, String> studentGradeStudentIDTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentGradeCourseNameTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentGradeCourseIDTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentGradeCreditsTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentGradeGradeTableColumn;
+
+    @FXML private TableColumn<Grade, String> studentGradeStatusTableColumn;
+
+    @FXML private TextField studentGradePassedCreditsTextField;
+
+    @FXML private TextField studentGradeFailedCourseNumberTextField;
+
+    @FXML private TextField studentGradeFailedCreditsTextField;
+
+    @FXML private TextField studentGradeWeightedAverageScoreTextField;
+
+    // add course for student
+    @FXML private TextField addCourseStudentIDTextField;
+
+    @FXML private TextField addCourseCourseIDTextField;
+
+    // update course grade
+    @FXML private TextField updateCourseGradeStudentIDTextField;
+
+    @FXML private TextField updateCourseGradeCourseIDTextField;
+
+    @FXML private TextField updateCourseGradeNewGradeTextField;
+
+    // delete course for student
+    @FXML private TextField deleteCourseStudentIDTextField;
+
+    @FXML private TextField deleteCourseCourseIDTextField;
+
+
+
 
     private boolean welcomeLabelLoaded = false;
 
@@ -307,6 +392,10 @@ public class TeacherController extends Controller {
         // punishment
         punishmentNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("punishmentName"));
         punishmentDateTableColumn.setCellValueFactory(new PropertyValueFactory<>("punishmentDate"));
+        // course
+        courseNameTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseName"));
+        courseIDTableColumn.setCellValueFactory(new PropertyValueFactory<>("courseID"));
+        courseCreditsTableColumn.setCellValueFactory(new PropertyValueFactory<>("credits"));
         // initialize the first ComboBox
         initializeStudentQueryComboBoxes();
         // listeners for the 1st level tab pane
@@ -346,6 +435,13 @@ public class TeacherController extends Controller {
 
                         }
                     }
+                }
+                case "课程管理" -> {
+                    // consider 2nd level tab pane
+
+                }
+                case "成绩管理" -> {
+
                 }
             }
         });

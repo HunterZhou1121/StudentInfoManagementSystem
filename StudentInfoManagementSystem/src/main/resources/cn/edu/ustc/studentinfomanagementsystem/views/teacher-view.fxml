@@ -688,85 +688,429 @@
                 <Tab text="课程管理">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <TableView fx:id="selectedCourseTableView" layoutX="159.0" layoutY="79.0" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
-                                    <columns>
-                                        <TableColumn fx:id="selectedCourseNameColumn" editable="false" prefWidth="75.0" text="课程名" />
-                                        <TableColumn fx:id="selectedCourseIDColumn" editable="false" prefWidth="75.0" text="课程号" />
-                                        <TableColumn fx:id="selectedCourseCreditsColumn" editable="false" prefWidth="75.0" text="课程学分" />
-                                    </columns>
-                                    <columnResizePolicy>
-                                        <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                    </columnResizePolicy>
-                                </TableView>
-                            </children></AnchorPane>
+                     <children>
+                        <TabPane fx:id="teacherCourseTabPane" layoutX="131.0" layoutY="55.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <tabs>
+                            <Tab text="查询">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="courseTableView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <columns>
+                                                <TableColumn fx:id="courseNameTableColumn" editable="false" prefWidth="75.0" text="课程名" />
+                                                <TableColumn fx:id="courseIDTableColumn" editable="false" prefWidth="75.0" text="课程号" />
+                                                <TableColumn fx:id="courseCreditsTableColumn" editable="false" prefWidth="75.0" text="课程学分" />
+                                             </columns>
+                                             <columnResizePolicy>
+                                                <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                             </columnResizePolicy>
+                                          </TableView>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                            <Tab text="添加">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="50.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="newCourseIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程名">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="newCourseNameTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程学分">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="newCourseCreditsTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" text="添加课程">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                              <Tab text="修改">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="35.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="updateOldCourseIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="新课程号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="updateNewCourseIDTextField" promptText="为空则不作修改" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="新课程名">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="updateNewCourseNameTextField" promptText="为空则不作修改" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="新课程学分">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="updateNewCourseCreditsTextField" promptText="为空则不作修改" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" text="修改课程">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="删除">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="50.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="deleteCourseIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" text="删除课程">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children></AnchorPane>
                     </content>
                 </Tab>
                 <Tab text="成绩管理">
                     <content>
                         <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
-                            <children>
-                                <VBox layoutX="323.0" layoutY="182.0" prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
-                                    <children>
-                                        <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
-                                            <children>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                                                    <children>
-                                                        <Label contentDisplay="CENTER" text="已通过学分" textAlignment="CENTER">
-                                                            <font>
-                                                                <Font name="Microsoft YaHei" size="12.0" />
-                                                            </font>
-                                                        </Label>
-                                                        <TextField fx:id="passedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                                                    <children>
-                                                        <Label contentDisplay="CENTER" text="未通过课程数" textAlignment="CENTER">
-                                                            <font>
-                                                                <Font name="Microsoft YaHei" size="12.0" />
-                                                            </font>
-                                                        </Label>
-                                                        <TextField fx:id="failedCourseNumberTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                                                    <children>
-                                                        <Label contentDisplay="CENTER" text="未通过学分" textAlignment="CENTER">
-                                                            <font>
-                                                                <Font name="Microsoft YaHei" size="12.0" />
-                                                            </font>
-                                                        </Label>
-                                                        <TextField fx:id="failedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
-                                                    </children>
-                                                </HBox>
-                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
-                                                    <children>
-                                                        <Label contentDisplay="CENTER" text="加权平均分" textAlignment="CENTER">
-                                                            <font>
-                                                                <Font name="Microsoft YaHei" size="12.0" />
-                                                            </font>
-                                                        </Label>
-                                                        <TextField fx:id="weightedAverageScoreTextField" editable="false" prefHeight="25.0" prefWidth="75.0" />
-                                                    </children>
-                                                </HBox>
-                                            </children>
-                                        </HBox>
-                                        <TableView fx:id="gradeTableView" prefHeight="542.0" prefWidth="1229.0">
-                                            <columns>
-                                                <TableColumn fx:id="gradeCourseNameColumn" editable="false" prefWidth="75.0" text="课程名" />
-                                                <TableColumn fx:id="gradeCourseIDColumn" editable="false" prefWidth="75.0" text="课程号" />
-                                                <TableColumn fx:id="gradeCreditsColumn" editable="false" prefWidth="75.0" text="课程学分" />
-                                                <TableColumn fx:id="gradeColumn" editable="false" prefWidth="75.0" text="课程成绩" />
-                                                <TableColumn fx:id="gradeStatusColumn" editable="false" prefWidth="75.0" text="课程状态" />
-                                            </columns>
-                                            <columnResizePolicy>
+                     <children>
+                        <TabPane fx:id="teacherGradeTabPane" layoutX="107.0" layoutY="161.0" prefHeight="200.0" prefWidth="200.0" tabClosingPolicy="UNAVAILABLE" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                          <tabs>
+                            <Tab text="学生选课查询">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <TableView fx:id="studentCourseTableView" prefHeight="200.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <columns>
+                                                <TableColumn fx:id="studentCourseStudentIDTableColumn" prefWidth="75.0" text="学号" />
+                                                <TableColumn fx:id="studentCourseCourseNameTableColumn" editable="false" prefWidth="75.0" text="课程名" />
+                                                <TableColumn fx:id="studentCourseCourseIDTableColumn" editable="false" prefWidth="75.0" text="课程号" />
+                                                <TableColumn fx:id="studentCourseCreditsTableColumn" editable="false" prefWidth="75.0" text="课程学分" />
+                                             </columns>
+                                             <columnResizePolicy>
                                                 <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
-                                            </columnResizePolicy>
-                                        </TableView>
-                                    </children>
-                                </VBox>
-                            </children></AnchorPane>
+                                             </columnResizePolicy>
+                                          </TableView>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                            <Tab text="学生成绩查询">
+                              <content>
+                                <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <VBox prefHeight="200.0" prefWidth="100.0" AnchorPane.bottomAnchor="25.0" AnchorPane.leftAnchor="25.0" AnchorPane.rightAnchor="25.0" AnchorPane.topAnchor="25.0">
+                                             <children>
+                                                <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" text="已通过学分" textAlignment="CENTER">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="studentGradePassedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" text="未通过课程数" textAlignment="CENTER">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="studentGradeFailedCourseNumberTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" text="未通过学分" textAlignment="CENTER">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="studentGradeFailedCreditsTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="15.0">
+                                                         <children>
+                                                            <Label contentDisplay="CENTER" text="加权平均分" textAlignment="CENTER">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="studentGradeWeightedAverageScoreTextField" editable="false" prefHeight="25.0" prefWidth="75.0" styleClass="non-editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </HBox>
+                                                <TableView fx:id="studentGradeTableView" prefHeight="542.0" prefWidth="1229.0">
+                                                   <columns>
+                                                      <TableColumn fx:id="studentGradeStudentIDTableColumn" prefWidth="75.0" text="学号" />
+                                                      <TableColumn fx:id="studentGradeCourseNameTableColumn" editable="false" prefWidth="75.0" text="课程名" />
+                                                      <TableColumn fx:id="studentGradeCourseIDTableColumn" editable="false" prefWidth="75.0" text="课程号" />
+                                                      <TableColumn fx:id="studentGradeCreditsTableColumn" editable="false" prefWidth="75.0" text="课程学分" />
+                                                      <TableColumn fx:id="studentGradeGradeTableColumn" editable="false" prefWidth="75.0" text="课程成绩" />
+                                                      <TableColumn fx:id="studentGradeStatusTableColumn" editable="false" prefWidth="75.0" text="课程状态" />
+                                                   </columns>
+                                                   <columnResizePolicy>
+                                                      <TableView fx:constant="CONSTRAINED_RESIZE_POLICY" />
+                                                   </columnResizePolicy>
+                                                </TableView>
+                                             </children>
+                                          </VBox>
+                                       </children>
+                                    </AnchorPane>
+                              </content>
+                            </Tab>
+                              <Tab text="学生选课添加">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="50.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="学号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="addCourseStudentIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="addCourseCourseIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" text="添加选课">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="学生成绩添加/修改">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="50.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="学号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="updateCourseGradeStudentIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="updateCourseGradeCourseIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程成绩">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="updateCourseGradeNewGradeTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" text="添加/修改成绩">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                              <Tab text="学生选课/成绩删除">
+                                <content>
+                                  <AnchorPane minHeight="0.0" minWidth="0.0" prefHeight="180.0" prefWidth="200.0">
+                                       <children>
+                                          <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" AnchorPane.bottomAnchor="0.0" AnchorPane.leftAnchor="0.0" AnchorPane.rightAnchor="0.0" AnchorPane.topAnchor="0.0">
+                                             <children>
+                                                <VBox alignment="CENTER" prefHeight="200.0" prefWidth="300.0" spacing="50.0">
+                                                   <children>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="学号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="deleteCourseStudentIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER_RIGHT" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Label text="课程号">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="20.0" />
+                                                               </font>
+                                                            </Label>
+                                                            <TextField fx:id="deleteCourseCourseIDTextField" styleClass="editable-textfield" stylesheets="@../styles/styles.css" />
+                                                         </children>
+                                                      </HBox>
+                                                      <HBox alignment="CENTER" prefHeight="100.0" prefWidth="200.0" spacing="50.0">
+                                                         <children>
+                                                            <Button mnemonicParsing="false" text="选课/成绩删除">
+                                                               <font>
+                                                                  <Font name="Microsoft YaHei" size="12.0" />
+                                                               </font>
+                                                            </Button>
+                                                         </children>
+                                                      </HBox>
+                                                   </children>
+                                                </VBox>
+                                             </children>
+                                          </HBox>
+                                       </children>
+                                    </AnchorPane>
+                                </content>
+                              </Tab>
+                          </tabs>
+                        </TabPane>
+                     </children></AnchorPane>
                     </content>
                 </Tab>
             </tabs>
