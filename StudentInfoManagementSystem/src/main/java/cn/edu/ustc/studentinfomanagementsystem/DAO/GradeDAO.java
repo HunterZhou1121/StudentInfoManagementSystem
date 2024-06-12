@@ -5,30 +5,11 @@ import cn.edu.ustc.studentinfomanagementsystem.models.Grade;
 import cn.edu.ustc.studentinfomanagementsystem.utils.DBConnection;
 import org.jetbrains.annotations.Nullable;
 
-import java.math.BigDecimal;
 import java.sql.*;
 import java.util.ArrayList;
 import java.util.List;
 
 public class GradeDAO extends DAO {
-    // update an integer field with two key-value pairs
-//    private static boolean updateGradeField(String updateField, Integer updateValue, String studentID, String courseID, Connection connection) {
-//        return updateDBField("Grade", updateField, updateValue, "StudentID", studentID, "CourseID", courseID, connection);
-//    }
-
-//    private static boolean deleteFromGrade(String studentID, String courseID, Connection connection) {
-//        return deleteFromDBField("Grade", "StudentID", studentID, "CourseID", courseID, connection);
-//    }
-
-//    private static boolean deleteFromGrade(String studentID, String courseID) {
-//        try (Connection conn = DBConnection.getConnection(true)) {
-//            return deleteFromGrade(studentID, courseID, conn);
-//        } catch (SQLException e) {
-//            DBConnection.SQLExceptionHandler(e);
-//            return false;
-//        }
-//    }
-
     public static List<Grade> queryStudentCurrentCourses(String studentID) {
         String sql = "SELECT * FROM StudentGrade WHERE StudentID = ?";
         List<Grade> courses = new ArrayList<>();

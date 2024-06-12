@@ -434,11 +434,6 @@ public class StudentController extends Controller {
         if (statisticsLoaded) {
             return;
         }
-//        loadPassedCredits();
-//        loadFailedCourseNumber();
-//        loadFailedCredits();
-//        loadWeightedAverageScore();
-//        statisticsLoaded = loadPassedCredits() && loadFailedCourseNumber() && loadFailedCredits() && loadWeightedAverageScore();
         boolean passedCreditsLoaded = loadPassedCredits();
         boolean failedCourseNumberLoaded = loadFailedCourseNumber();
         boolean failedCreditsLoaded = loadFailedCredits();

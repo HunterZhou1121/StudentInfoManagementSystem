@@ -2,6 +2,7 @@ package cn.edu.ustc.studentinfomanagementsystem.DAO;
 
 import cn.edu.ustc.studentinfomanagementsystem.utils.DBConnection;
 import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
 
 import java.math.BigDecimal;
 import java.sql.*;
@@ -189,7 +190,7 @@ public class DAO {
         }
     }
 
-    protected static Float callFloatFunction(String functionName, String parameter, String alias, Connection connection) {
+    protected static @Nullable Float callFloatFunction(String functionName, String parameter, String alias, Connection connection) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         String sql = "SELECT " + functionName + "(?) as " + alias;
         try (
@@ -214,7 +215,7 @@ public class DAO {
         }
     }
 
-    protected static Integer callIntFunction(String functionName, String parameter, String alias, Connection connection) {
+    protected static @Nullable Integer callIntFunction(String functionName, String parameter, String alias, Connection connection) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         String sql = "SELECT " + functionName + "(?) as " + alias;
         try (
@@ -240,7 +241,7 @@ public class DAO {
         }
     }
 
-    protected static String callDecimalFunction(String functionName, String parameter, String alias, Connection connection) {
+    protected static @Nullable String callDecimalFunction(String functionName, String parameter, String alias, Connection connection) {
         // SELECT GetWeightedAverageScore('PB21111738') as WeightedAverageScore;
         String sql = "SELECT " + functionName + "(?) as " + alias;
         try (

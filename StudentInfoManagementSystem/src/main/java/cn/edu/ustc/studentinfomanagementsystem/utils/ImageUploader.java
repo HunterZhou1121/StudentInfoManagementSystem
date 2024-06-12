@@ -7,6 +7,7 @@ import org.apache.http.entity.mime.MultipartEntityBuilder;
 import org.apache.http.impl.client.CloseableHttpClient;
 import org.apache.http.impl.client.HttpClients;
 import org.apache.http.util.EntityUtils;
+import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 import org.json.JSONObject;
 
@@ -23,7 +24,7 @@ public class ImageUploader {
 
     private static final String UID = "081a11e22460efe0cebd44e8e6972137";
 
-    public static @Nullable String uploadImage(File file) {
+    public static @Nullable String uploadImage(@NotNull File file) {
         if (!file.exists()) {
             return null;
         }
