@@ -1304,8 +1304,9 @@ public class TeacherController extends Controller {
     }
 
     public void loadImageView(String photoURL) {
+        photoImageView.setImage(null);
         if (photoURL == null) {
-            photoImageView.setImage(null);
+//            photoImageView.setImage(null);
             return;
         }
         setImage(photoImageView, photoURL);
