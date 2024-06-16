@@ -231,6 +231,7 @@ public class StudentDAO extends DAO {
                     success = ps.executeUpdate() == 1;
                 }
                 if (!success) {
+                    conn.rollback();
                     return false;
                 }
                 // insert into Enrolment
