@@ -1,4 +1,15 @@
 USE lab02;
+-- Truncate the tables
+SET FOREIGN_KEY_CHECKS = 0;
+TRUNCATE TABLE Grade;
+TRUNCATE TABLE Course;
+TRUNCATE TABLE Award;
+TRUNCATE TABLE Punishment;
+TRUNCATE TABLE StudentAccount;
+TRUNCATE TABLE Enrolment;
+TRUNCATE TABLE Student;
+SET FOREIGN_KEY_CHECKS = 1;
+
 -- Insert into Student
 INSERT INTO
     Student(
@@ -97,8 +108,8 @@ VALUES
     ('PB23021112', 'PHYS1001B', 59),-- 力学B
     ('PB23021112', '011103', 89),   -- 代数结构
     ('PB23021112', '011151', 58),   -- 模拟与数字电路
-    ('PB23021112', 'PHYS1010', NULL); -- 量子物理
-
+    ('PB23021112', 'PHYS1010', NULL), -- 量子物理
+    ('PB21111738', '011127', 80);   -- 数据结构
 -- Insert into Award
 INSERT INTO
     Award(

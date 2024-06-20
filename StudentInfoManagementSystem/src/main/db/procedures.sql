@@ -74,6 +74,7 @@ BEGIN
             -- Backup related data: Grade, Award, Punishment, StudentAccount
             SET SQL_SAFE_UPDATES = 0;
             -- Grade
+            DROP TEMPORARY TABLE IF EXISTS GradeBackup;
             CREATE TEMPORARY TABLE GradeBackup AS
                 SELECT *
                     FROM Grade
@@ -82,6 +83,7 @@ BEGIN
                 SET StudentID = NewStudentID;
             DELETE FROM Grade WHERE Grade.StudentID = OldStudentID;
             -- Award
+            DROP TEMPORARY TABLE IF EXISTS AwardBackup;
             CREATE TEMPORARY TABLE AwardBackup AS
                 SELECT *
                     FROM Award
@@ -90,6 +92,7 @@ BEGIN
                 SET StudentID = NewStudentID;
             DELETE FROM Award WHERE Award.StudentID = OldStudentID;
             -- Punishment
+            DROP TEMPORARY TABLE IF EXISTS PunishmentBackup;
             CREATE TEMPORARY TABLE PunishmentBackup AS
                 SELECT *
                     FROM Punishment
@@ -98,6 +101,7 @@ BEGIN
                 SET StudentID = NewStudentID;
             DELETE FROM Punishment WHERE Punishment.StudentID = OldStudentID;
             -- StudentAccount
+            DROP TEMPORARY TABLE IF EXISTS StudentAccountBackup;
             CREATE TEMPORARY TABLE StudentAccountBackup AS
                 SELECT *
                     FROM StudentAccount
@@ -189,6 +193,7 @@ BEGIN
             -- Backup related data: Grade
             SET SQL_SAFE_UPDATES = 0;
             -- Grade
+            DROP TEMPORARY TABLE IF EXISTS GradeBackup;
             CREATE TEMPORARY TABLE GradeBackup AS
                 SELECT *
                     FROM Grade
